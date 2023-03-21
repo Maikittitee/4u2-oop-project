@@ -1,7 +1,7 @@
 
 class	Product:
 	def __init__(self, product_id : str, product_name:str, product_price:int, product_description: str, product_detail : str, product_type : list, product_stock : int, product_specify : str):
-		self.product_id =  product_id;
+		self.product_id =  product_id
 		self.product_name = product_name
 		self.product_price = product_price
 		self.product_description = product_description
