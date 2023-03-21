@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/03/22 00:25:13 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/03/22 01:23:15 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,8 +37,19 @@ class	Product:
 		self.product_specify = product_specify
 
 class User:
-	def __init__ (self):
-		pass	
+	def __init__ (self, user_id, email, name):
+		self.user_id = user_id
+		self.email = email
+		self.name = name
+
+class Account:
+	def __init__ (self, email):
+		self.email = email
+
+class Admin(User):
+	def __init__ (self, salary):
+		self.salary = salary
+
 
 product = ProductCatalog(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
 print(product.last_update)
