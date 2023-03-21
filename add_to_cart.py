@@ -48,7 +48,7 @@ class	ShoppingCart:
 		total = 0
 		for item in self.items:
 			if (item.promotion != None):
-				print(f"{i}. {item.product.product_name}\t{item.product.product_specify}\tprice: {item.product.product_price} ฿ --> {item.product.product_price * ((100 - self.promotion.discount)/100)} x {item.quantity} : {item.product.product_price * item.quantity}")
+				print(f"{i}. {item.product.product_name}\t{item.product.product_specify}\tprice: {item.product.product_price} ฿ --> {item.product.product_price * ((100 - self.promotion.discount)/100)} x {item.quantity} : {item.product.product_price * ((100 - self.promotion.discount)/100) * item.quantity}")
 				item.product.product_price * ((100 - self.promotion.discount)/100) * item.quantity
 			else:
 				print(f"{i}. {item.product.product_name}\t{item.product.product_specify}\tprice: {item.product.product_price} ฿ x {item.quantity} : {item.product.product_price * item.quantity}")
