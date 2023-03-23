@@ -1,4 +1,16 @@
 
+
+class Colors:
+    HEADER = '\033[95m'
+    BLUE = '\033[94m'
+    CYAN = '\033[96m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 class	Product:
 	def __init__(self, product_id : str, product_name:str, product_price:int, product_description: str, product_detail : str, product_type : list, product_stock : int, product_specify : str):
 		self.product_id =  product_id
@@ -44,15 +56,16 @@ class	ShoppingCart:
 	def	show_cart(self):
 		i = 1
 		total = 0
+		print(f"{Colors.HEADER}### SHOPPING CART ###{Colors.ENDC}")
 		for item in self.items:
 			if (item.promotion != None):
-				print(f"{i}. {item.product.product_name}\t{item.product.product_specify}\tprice: {item.product.product_price} ฿ --> {item.product.product_price * ((100 - self.promotion.discount)/100)} x {item.quantity} : {item.product.product_price * ((100 - self.promotion.discount)/100) * item.quantity}")
+				print(f"{i}. {Colors.BOLD}{Colors.GREEN}{item.product.product_name}{Colors.ENDC}\t{item.product.product_specify}\tprice: {item.product.product_price} ฿ --> {item.product.product_price * ((100 - self.promotion.discount)/100)} x {item.quantity} : {item.product.product_price * ((100 - self.promotion.discount)/100) * item.quantity}")
 				item.product.product_price * ((100 - self.promotion.discount)/100) * item.quantity
 			else:
-				print(f"{i}. {item.product.product_name}\t{item.product.product_specify}\tprice: {item.product.product_price} ฿ x {item.quantity} : {item.product.product_price * item.quantity}")
+				print(f"{i}. {Colors.BOLD}{Colors.GREEN}{item.product.product_name}{Colors.ENDC}\t{item.product.product_specify}\tprice: {item.product.product_price} ฿ x {item.quantity} : {item.product.product_price * item.quantity}")
 				total += item.product.product_price * item.quantity
 			i += 1
-		print(f"Total amount : {total}฿")
+		print(f"{Colors.BOLD}{Colors.YELLOW}Total amount : {total}฿{Colors.ENDC}")
 	
 
 product_1 = Product("65010030","Jelly Tint", 259, "Magic Lib Tint", "This is detail\nThis lib made by angle that came from heaven\nHave been sell For 10 year",["Lib"],9,"#07")
