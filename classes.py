@@ -6,11 +6,12 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/03/23 18:20:22 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/03/23 19:46:31 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # This is a implement of every class that came from class diagram
+# TODO : Relation
 
 from datetime import datetime
 import time
