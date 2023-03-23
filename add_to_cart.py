@@ -16,8 +16,6 @@ class	Item:
 		self.quantity = quantity
 		self.promotion = promotion
 
-		
-	
 	def show_product_name(self):
 		print(self.product.product_name)
 
