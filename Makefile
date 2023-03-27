@@ -1,5 +1,5 @@
 SRCS = add_to_cart.py
-CLASS = class.py
+CLASS = classes.py
 
 all :
 	python3 $(CLASS) 
