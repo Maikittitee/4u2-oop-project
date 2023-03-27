@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/03/27 09:07:50 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/03/27 09:15:09 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,6 @@ class ProductCatalog:
 #########################################################
 # ---------------------- PRODUCT ---------------------- #
 #########################################################
-
 
 class	Product:
 	def __init__(self, product_id : str, product_name:str, product_price:int, product_description: str, product_detail : str, product_type : list, product_stock : int, product_specify : str):
