@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/03/23 19:46:31 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/03/27 09:07:50 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,9 @@ from enum import Enum
 
 class Shop:
 	def __init__(self):
-		pass
+		self.product_catalog = [] #AGRET ProductCatalog
+		self.user = [] #AGGRESION User
+		self.promotion = [] # AGGRESTION Promotion
 
 class ProductCatalog:
 	def __init__ (self, first_create):
@@ -53,6 +55,7 @@ class	Promotion:
 		self.date_start = date_start
 		self.date_end = date_end
 		self.discount = discount
+		self.product = [] # COMPOSITION Product
 
 class	Item:
 	def	__init__ (self, quanity):
