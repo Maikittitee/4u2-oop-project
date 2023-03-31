@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/03/30 17:10:01 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/03/31 19:22:08 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,8 @@
 from datetime import datetime
 import time
 from enum import Enum
+import	json
+
 
 class Colors:
     HEADER = '\033[95m'
@@ -62,9 +64,9 @@ class	Product:
 		self.specify = product_specify
 
 class	Item:
-	def	__init__ (self, product, quanity, promotion):
+	def	__init__ (self, product, quantity, promotion):
 		self.product = product
-		self.quanity = quanity
+		self.quantity = quantity
 		self.promotion = promotion # Composition Promotion
 
 class	Promotion:
@@ -101,7 +103,7 @@ class Admin(User):
 
 class Customer(User):
 	def __init__ (self):
-		self.shopping_cart = ShoppingCart('SC' + user_id) # Association ShoppingCart 
+		self.shopping_cart = ShoppingCart('SC' + self.id) # Association ShoppingCart 
 
 class Guest(Customer):
 	def	__init__ (self):
@@ -134,6 +136,22 @@ class	ShoppingCart:
 	def	add_to_cart(self, product, quantity):
 		item = Item(product, quantity, self.get_promotion(product))
 		self.items.append(item)
+	
+	def	show_cart(self):
+		total = 0
+		ret_dict = {}
+		ret_dict["__cart_id"]=self.cart_id
+		for item in self.items:
+			total += item.product.price
+			ret_dict[item.product.name] = {
+				"product_price":item.product.price,
+				"quantity":item.quantity,
+				"price":item.quantity * item.product.price
+			}
+		ret_dict["__total"] = total
+		return (ret_dict)
+
+
 
 class	Favorite:
 	def	__init__ (self):
@@ -190,9 +208,10 @@ product_1 = Product("65010030","Jelly Tint", 259, "Magic Lib Tint", "This is det
 product_2 = Product("65010134","EST. HARDDER 2", 229, "nothing here", "This is another detaikl",["Lib"],1,"#31")
 promo = Promotion(["65010030"],"1/1/2022","31/12/2023", 39)
 shop.promotions.append(promo)
-cart = ShoppingCart("fuck",shop.promotions)
+cart = ShoppingCart("This is a Cart ID",shop.promotions)
 cart.add_to_cart(product_1,3)
-# cart.add_to_cart(product_2,2)
+cart.add_to_cart(product_2,2)
 
-for item in cart.items:
-	print(item.product.name)
+print(json.dumps(cart.show_cart(),indent = 4))
+# for item in cart.items:
+# 	print(item.product.name)
