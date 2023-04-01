@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/01 02:24:20 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/01 23:20:09 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,25 @@ import time
 from enum import Enum
 from typing import Optional
 import	json
+import hashlib
 
+class ID:
+    def __init__(self):
+        self.__id_count = 0
+
+    def generateID(self):
+        self.__id_count += 1
+        return str(self.__id_count)
+
+admin_id_gen = ID()
+user_id_gen = ID()
+cart_id_gen = ID()
+product_id_gen = ID()
+class IdGenerator:
+    @staticmethod
+    def generate_id(username):
+        user_id = hashlib.md5(username.encode()).hexdigest()
+        return user_id
 
 class Colors:
     HEADER = '\033[95m'
@@ -83,8 +101,8 @@ class ProductCatalog:
 #########################################################
 
 class	Product:
-	def __init__(self, product_id : str, product_name:str, product_price:int, product_description: str, product_detail : str, product_type : list, product_stock : int, product_specify : str):
-		self.id =  product_id
+	def __init__(self, product_name:str, product_price:int, product_description: str, product_detail : str, product_type : list, product_stock : int, product_specify : str):
+		self.id =  product_id_gen.generateID()
 		self.name = product_name
 		self.price = product_price
 		self.description = product_description
@@ -119,55 +137,94 @@ class	Promotion:
 		self.products = product_list # COMPOSITION Product
 
 
-
-
-
 #########################################################
 # ----------------------- USER ------------------------ #
 #########################################################
-
-class	UserStatus(Enum):
-	ONLINE = 1
-	OFFLINE = 0
-class User:
-	def __init__ (self, user_id, email, name):
-		self.user_id = user_id
-		self.email = email
-		self.name = name
-		self.status = UserStatus.OFFLINE
-		self.account = None # Compostion Account ????
-
 class Account:
 	def __init__ (self, email, password):
 		self.email = email
 		self.password = password
 
+
+class	UserStatus(Enum):
+	ONLINE = 1
+	OFFLINE = 0
+
+class User:
+	def	__init__(self,id,name):
+		self.user_id = id
+		self.name = name
+		self.status = UserStatus.OFFLINE
+		self.account = Account(None, None) # Compostion Account ????
+
+	def	login(self):
+		pass
+
+	def	create_new_user(self):
+		pass
+
+	def	logout(self):
+		pass
+
 class Admin(User):
-	def __init__ (self, salary, shop):
+	count = 0
+	def __init__ (self, name,salary, shop):
+		User.__init__(self,f"admin{admin_id_gen.generateID()}",name)
 		self.salary = salary
 		self.shop = shop # Association (manage) Shop
+	
+	def create_new_user():
+		pass
 
 class Customer(User):
 	def __init__ (self):
-		self.shopping_cart = ShoppingCart('SC' + self.id) # Association ShoppingCart 
+		User.__init__(self,"idddd","maiki")
+		self.shopping_cart = ShoppingCart(f"SC{self.user_id}",shop.promotions) # Association ShoppingCart 
+
+	
 
 class Guest(Customer):
 	def	__init__ (self):
 		pass
 
+	def	register(self):
+		pass
+
 class AuthenticationUser(Customer):
 	def	__init__ (self, address):
+		Customer.__init__(self)
 		self.address = address
 		self.order = [] # Aggretion Order
 		self.favorite = Favorite() #  Association Favorite
+
+	def	get_user_detail(self):
+		return (
+		{
+			"user_id" : self.user_id,
+			"user_name": self.name,
+			"user_status": f"{self.status}",
+			"user_account":{
+				"email":self.account.email,
+				"password":self.account.password
+			},
+			"user_shopping_cart":self.shopping_cart.show_cart(),
+			"user_order":self.get_user_order(),
+			"user_favorite":self.get_user_favorite()
+		}
+		)
+	def	get_user_order(self):
+		return ("Yang Mai dai Tum")
+
+	def	get_user_favorite(self):
+		return ("Yang Mai dai Tum")
 
 #########################################################
 # --------------------- User Hold --------------------- #
 #########################################################
 
 class	ShoppingCart:
-	def __init__ (self, cart_id, promotions):
-		self.cart_id = cart_id
+	def __init__ (self, promotions):
+		self.cart_id = cart_id_gen.generateID()
 		self.total_amount = 0
 		self.promotions = promotions # Association Promotion (but it accully need to keep ALL Promotion then it's better if we use Shop)
 		self.items = [] # Aggretion Item
@@ -182,6 +239,7 @@ class	ShoppingCart:
 	def	add_to_cart(self, product, quantity):
 		item = Item(product, quantity, self.get_promotion(product))
 		self.items.append(item)
+		self.total_amount += (item.product.price * item.quantity)
 	
 	def	show_cart(self):
 		total = 0
@@ -258,17 +316,17 @@ class	OrderStatus(Enum):
 	PENDING = 1
 	CONFRIMED = 2
 
-current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-product_cat = ProductCatalog(current_time)
-product_1 = Product("65010030","Jelly Tint", 259, "Magic Lib Tint", "This is detail\nThis lib made by angle that came from heaven\nHave been sell For 10 year",["Lips"],9,"#07")
-product_2 = Product("65010134","EST. HARDDER 2", 229, "nothing here", "This is another detaikl",["d"],1,"#31")
-product_cat.add_product("newwww",123,"green",12,"haha","ha",["key"])
-promo = Promotion([product_1],"1/1/2022","31/12/2023", 39)
-promo2 = Promotion([product_2],"1/1/2022","31/12/2023", 100)
-product_cat.products.append(product_1)
-product_cat.products.append(product_2)
-shop.promotions.append(promo)
-shop.promotions.append(promo2)
+# current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+# product_cat = ProductCatalog(current_time)
+# product_1 = Product("65010030","Jelly Tint", 259, "Magic Lib Tint", "This is detail\nThis lib made by angle that came from heaven\nHave been sell For 10 year",["Lips"],9,"#07")
+# product_2 = Product("65010134","EST. HARDDER 2", 229, "nothing here", "This is another detaikl",["d"],1,"#31")
+# product_cat.add_product("newwww",123,"green",12,"haha","ha",["key"])
+# promo = Promotion([product_1],"1/1/2022","31/12/2023", 39)
+# promo2 = Promotion([product_2],"1/1/2022","31/12/2023", 100)
+# product_cat.products.append(product_1)
+# product_cat.products.append(product_2)
+# shop.promotions.append(promo)
+# shop.promotions.append(promo2)
 # shop.promotions.append(promo2)
 # cart = ShoppingCart("This is a Cart ID",shop.promotions)
 # cart.add_to_cart(product_1,3)
@@ -277,6 +335,22 @@ shop.promotions.append(promo2)
 # print(json.dumps(cart.show_cart(),indent = 4))
 # print(cart.promotions)
 
-print(json.dumps(product_cat.browse_product(),indent = 4))
+# customer = Customer()
+
+# customer.se
+
+admin_1 = Admin("Nonene",2000,shop)
+admin_2 = Admin("Peachji",1,shop)
+
+print(admin_1.user_id)
+print(admin_2.user_id)
+
+# user_1 = AuthenticationUser("99/39")
+# user_1.user_id = "1111"
+# user_1.name = "maiki"
+# print(dir(user_1))
+# print(json.dumps(user_1.get_user_detail(),indent = 4))
+
+# print(json.dumps(product_cat.browse_product(),indent = 4))
 # print(product_cat.last_update)
 
