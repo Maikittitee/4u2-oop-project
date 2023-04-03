@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/01 23:20:09 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/04 01:25:28 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ from enum import Enum
 from typing import Optional
 import	json
 import hashlib
+from fastapi import FastAPI
 
 class ID:
     def __init__(self):
@@ -66,11 +67,9 @@ class ProductCatalog:
 		self.last_update = first_create
 		self.products = []
 
-	def	product_id_genarator(self,name:str):
-		return (f"{name}Assumethisisproductid")
 
 	def	add_product(self, name, price, specify, stock, description, detail, p_type):
-		new_product = Product(self.product_id_genarator(name),name,price, description, detail, p_type, stock, specify)
+		new_product = Product(name,price, description, detail, p_type, stock, specify)
 		self.products.append(new_product)
 		self.last_update = datetime.now().strftime("%d/%m/%Y %H:%M:%S") 
 
@@ -87,13 +86,14 @@ class ProductCatalog:
 					product_list.append(product)
 		else:
 			product_list = self.products
+		print(product_list)
 		ret_dict = {}
 		count_product = 0
 		for product in product_list:
 			count_product += 1
-			ret_dict[product.name] = product.get_product_detail()
-		ret_dict["__count_product"]:count_product
-		return (ret_dict)
+			ret_dict.update({product.name: product.get_product_detail()})
+		ret_dict["__count_product"] = count_product
+		return ((json.dumps(ret_dict)))
 
 
 #########################################################
@@ -103,13 +103,17 @@ class ProductCatalog:
 class	Product:
 	def __init__(self, product_name:str, product_price:int, product_description: str, product_detail : str, product_type : list, product_stock : int, product_specify : str):
 		self.id =  product_id_gen.generateID()
-		self.name = product_name
+		self.__name = product_name
 		self.price = product_price
 		self.description = product_description
 		self.detail = product_detail
 		self.type = product_type
 		self.stock = product_stock
 		self.specify = product_specify
+
+	@property 
+	def	name(self):
+		return(self.__name)
 
 	def	get_product_detail(self):
 		return ({
@@ -318,39 +322,18 @@ class	OrderStatus(Enum):
 
 # current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 # product_cat = ProductCatalog(current_time)
-# product_1 = Product("65010030","Jelly Tint", 259, "Magic Lib Tint", "This is detail\nThis lib made by angle that came from heaven\nHave been sell For 10 year",["Lips"],9,"#07")
-# product_2 = Product("65010134","EST. HARDDER 2", 229, "nothing here", "This is another detaikl",["d"],1,"#31")
+# product_1 = Product("Jelly Tint", 259, "Magic Lib Tint", "This is detail\nThis lib made by angle that came from heaven\nHave been sell For 10 year",["Lips"],9,"#07")
+# product_2 = Product("EST. HARDDER 2", 229, "nothing here", "This is another detaikl",["d"],1,"#31")
 # product_cat.add_product("newwww",123,"green",12,"haha","ha",["key"])
 # promo = Promotion([product_1],"1/1/2022","31/12/2023", 39)
 # promo2 = Promotion([product_2],"1/1/2022","31/12/2023", 100)
-# product_cat.products.append(product_1)
-# product_cat.products.append(product_2)
+# # product_cat.products.append(product_1)
+# # product_cat.products.append(product_2)
 # shop.promotions.append(promo)
 # shop.promotions.append(promo2)
 # shop.promotions.append(promo2)
-# cart = ShoppingCart("This is a Cart ID",shop.promotions)
+# cart = ShoppingCart(shop.promotions)
 # cart.add_to_cart(product_1,3)
 # cart.add_to_cart(product_2,2)
-
-# print(json.dumps(cart.show_cart(),indent = 4))
-# print(cart.promotions)
-
-# customer = Customer()
-
-# customer.se
-
-admin_1 = Admin("Nonene",2000,shop)
-admin_2 = Admin("Peachji",1,shop)
-
-print(admin_1.user_id)
-print(admin_2.user_id)
-
-# user_1 = AuthenticationUser("99/39")
-# user_1.user_id = "1111"
-# user_1.name = "maiki"
-# print(dir(user_1))
-# print(json.dumps(user_1.get_user_detail(),indent = 4))
-
-# print(json.dumps(product_cat.browse_product(),indent = 4))
-# print(product_cat.last_update)
-
+# admin_1 = Admin("Nonene",2000,shop)
+# admin_2 = Admin("Peachji",1,shop)
