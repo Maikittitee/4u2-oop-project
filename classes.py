@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/04 01:25:28 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/04 13:36:46 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -91,9 +91,9 @@ class ProductCatalog:
 		count_product = 0
 		for product in product_list:
 			count_product += 1
-			ret_dict.update({product.name: product.get_product_detail()})
+			ret_dict.update({product.id: product.get_product_detail()})
 		ret_dict["__count_product"] = count_product
-		return ((json.dumps(ret_dict)))
+		return (ret_dict)
 
 
 #########################################################
