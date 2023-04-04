@@ -18,18 +18,21 @@ product_cat.add_product("Keychorn Q1", 6790, "Blue", 12, "First Keychron custom 
 # shop.promotions.append(promo2)
 # shop.promotions.append(promo2)
 cart = ShoppingCart(shop.promotions)
+cart.add_to_cart(product_cat.get_inst_product_by_id("1"),1)
+cart.add_to_cart(product_cat.get_inst_product_by_id("3"),1)
+
 # cart.add_to_cart(product_1,3)
 # cart.add_to_cart(product_2,2)
 admin_1 = Admin("Nonene",2000,shop)
 admin_2 = Admin("Peachji",1,shop)
 
-
+# print(cart.show_cart())
 app = FastAPI()
-
 
 @app.get("/")
 def	root():
 	return ({"msg":"Welcome to root path, there are nothing here, better specofic path  , for example , /products or /users"})
+
 
 @app.get("/Products")
 def	products():
@@ -49,6 +52,21 @@ def	products(type_ip:str):
 def	view_products(id : str):
 	return (product_cat.get_product_by_id(id))
 
+# input_dict = 
+order_id_gen = ID()
+
+@app.post("/users/user/cart/checkout")
+def make_purchase():	
+	od = cart.new_order(order_id_gen.generateID(),current_time,"thisIsAName")
+	return (od.get_order_detail())
 
 
-print(product_cat.browse_product(None,"Lips"))
+
+# od = cart.new_order(order_id_gen.generateID(),current_time,"thisIsAName")
+# print(od.get_order_detail())
+
+# for item in od.items:
+# 	print(item.product.name)
+
+# print()
+# print(product_cat.browse_product(None,"Lips"))
