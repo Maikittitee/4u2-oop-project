@@ -4,6 +4,7 @@ from classes import shop
 from fastapi import FastAPI
 
 
+
 current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 product_cat = ProductCatalog(current_time)
 product_cat.add_product("Jelly Tint", 259, "#07", 9, "Magic Lib Tint", "This is detail\nThis lib made by angle that came from heaven\nHave been sell For 10 year",["Lips"])
@@ -43,5 +44,11 @@ def	products(name):
 @app.get("/Products/type/{type_ip}")
 def	products(type_ip:str):
 	return (product_cat.browse_product(None, type_ip))
+
+@app.get("/Products/{id}")
+def	view_products(id : str):
+	return (product_cat.get_product_by_id(id))
+
+
 
 print(product_cat.browse_product(None,"Lips"))

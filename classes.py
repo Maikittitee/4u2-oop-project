@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/04 13:36:46 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/04 14:38:00 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,11 +14,9 @@
 # TODO : Relation
 
 from datetime import datetime
-import time
 from enum import Enum
 from typing import Optional
 import	json
-import hashlib
 from fastapi import FastAPI
 
 class ID:
@@ -64,14 +62,31 @@ shop = Shop()
 
 class ProductCatalog:
 	def __init__ (self, first_create):
-		self.last_update = first_create
+		# self.last_update = first_create
 		self.products = []
 
 
 	def	add_product(self, name, price, specify, stock, description, detail, p_type):
-		new_product = Product(name,price, description, detail, p_type, stock, specify)
-		self.products.append(new_product)
-		self.last_update = datetime.now().strftime("%d/%m/%Y %H:%M:%S") 
+		self.products.append(Product(name,price, description, detail, p_type, stock, specify))
+		# self.last_update = datetime.now().strftime("%d/%m/%Y %H:%M:%S") 
+
+	def get_product_by_id(self, id):
+		for product in self.products:
+			if (product.id == id):
+				return (product.get_product_detail());
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	def	browse_product (self, name : Optional[str] = None, type_input : Optional[str] = None) -> None:
@@ -228,8 +243,6 @@ class AuthenticationUser(Customer):
 
 class	ShoppingCart:
 	def __init__ (self, promotions):
-		self.cart_id = cart_id_gen.generateID()
-		self.total_amount = 0
 		self.promotions = promotions # Association Promotion (but it accully need to keep ALL Promotion then it's better if we use Shop)
 		self.items = [] # Aggretion Item
 
@@ -241,14 +254,11 @@ class	ShoppingCart:
 		return (None)
 
 	def	add_to_cart(self, product, quantity):
-		item = Item(product, quantity, self.get_promotion(product))
-		self.items.append(item)
-		self.total_amount += (item.product.price * item.quantity)
+		self.items.append(Item(product, quantity, self.get_promotion(product)))
 	
 	def	show_cart(self):
 		total = 0
 		ret_dict = {}
-		ret_dict["__cart_id"] = self.cart_id
 		for item in self.items:
 			if (item.promotion != None):
 				total += (item.product.price * (100 - item.promotion.discount)/100 * item.quantity)
@@ -320,20 +330,4 @@ class	OrderStatus(Enum):
 	PENDING = 1
 	CONFRIMED = 2
 
-# current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-# product_cat = ProductCatalog(current_time)
-# product_1 = Product("Jelly Tint", 259, "Magic Lib Tint", "This is detail\nThis lib made by angle that came from heaven\nHave been sell For 10 year",["Lips"],9,"#07")
-# product_2 = Product("EST. HARDDER 2", 229, "nothing here", "This is another detaikl",["d"],1,"#31")
-# product_cat.add_product("newwww",123,"green",12,"haha","ha",["key"])
-# promo = Promotion([product_1],"1/1/2022","31/12/2023", 39)
-# promo2 = Promotion([product_2],"1/1/2022","31/12/2023", 100)
-# # product_cat.products.append(product_1)
-# # product_cat.products.append(product_2)
-# shop.promotions.append(promo)
-# shop.promotions.append(promo2)
-# shop.promotions.append(promo2)
-# cart = ShoppingCart(shop.promotions)
-# cart.add_to_cart(product_1,3)
-# cart.add_to_cart(product_2,2)
-# admin_1 = Admin("Nonene",2000,shop)
-# admin_2 = Admin("Peachji",1,shop)
+
