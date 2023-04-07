@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/04 16:46:14 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/08 05:06:59 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,12 +31,6 @@ admin_id_gen = ID()
 user_id_gen = ID()
 cart_id_gen = ID()
 product_id_gen = ID()
-class IdGenerator:
-    @staticmethod
-    def generate_id(username):
-        user_id = hashlib.md5(username.encode()).hexdigest()
-        return user_id
-
 class Colors:
     HEADER = '\033[95m'
     BLUE = '\033[94m'
@@ -55,8 +49,8 @@ class Colors:
 class Shop:
 	def __init__(self):
 		self.product_catalog = [] #AGRET ProductCatalog
-		self.users = [] #AGGRESION User
-		self.promotions = [] # AGGRESTION Promotion
+		self.users = [] #AGGRESION User --> # KEEP ONLY ADMIN AND AUTHENTICATIONUSER !!!
+		self.promotions = [] # AGGRESTION Promotion\
 
 shop = Shop()
 
@@ -100,6 +94,10 @@ class ProductCatalog:
 			ret_dict.update({product.id: product.get_product_detail()})
 		ret_dict["__count_product"] = count_product
 		return (ret_dict)
+	
+	def view_product(product_id):
+		# this method need to implement all the same product but difference SPECIFY and each left stock
+		pass
 
 
 #########################################################
@@ -139,11 +137,34 @@ class	Item:
 		self.quantity = quantity
 		self.promotion = promotion # Composition Promotion
 
-	def	get_item_detail(self):
-		return {
-			"product":self.product.name,
-			"quantity":self.quantity,
-		}
+	# def	get_item_detail(self):
+	# 	return {
+	# 		"product":self.product.name,
+	# 		"quantity":self.quantity,
+	# 	}
+	
+	def get_item_detail(self):
+		ret_dict = {}
+		if (self.promotion != None):
+			# total += (item.product.price * (100 - item.promotion.discount)/100 * item.quantity)
+			ret_dict[self.product.name] = {
+				"product_price":self.product.price,
+				"discount":self.promotion.discount,
+				"price_after_discount": self.product.price * (100 - self.promotion.discount)/100 ,
+				"quantity":self.quantity,
+				"price":self.quantity * self.product.price * (100 - self.promotion.discount)/100 
+			}
+		else:
+			# total += (item.product.price * item.quantity)
+			ret_dict[self.product.name] = {
+				"product_price":self.product.price,
+				"discount":0,
+				"price_after_discount": self.product.price  ,
+				"quantity":self.quantity,
+				"price":self.quantity * self.product.price
+			}
+
+		return (ret_dict)
 class	Promotion:
 	def	__init__ (self, product_list:list,date_start, date_end, discount):
 		self.date_start = date_start
@@ -165,52 +186,74 @@ class	UserStatus(Enum):
 	ONLINE = 1
 	OFFLINE = 0
 
-class User:
-	def	__init__(self,id,name):
+class User: #ABTRACT CLASS
+	def	__init__(self,id):
 		self.user_id = id
-		self.name = name
+		self.name = None
+		self.shop = shop
 		self.status = UserStatus.OFFLINE
-		self.account = Account(None, None) # Compostion Account ????
 
-	def	login(self):
-		pass
-
-	def	create_new_user(self):
-		pass
+	def	login(self,username, password):
+		for user in self.shop.users:
+			if (username == user.name):
+				if (password == user.account.password):
+					user.status = UserStatus.ONLINE
+					return (1)
+				else:
+					return (0)
+		return (0)
 
 	def	logout(self):
 		pass
 
 class Admin(User):
 	count = 0
-	def __init__ (self, name,salary, shop):
+	def __init__ (self, name,salary, shop, username, email, password):
 		User.__init__(self,f"admin{admin_id_gen.generateID()}",name)
+		self.account = Account(email, password) 
 		self.salary = salary
-		self.shop = shop # Association (manage) Shop
-	
-	def create_new_user():
-		pass
+		self.name = username
 
 class Customer(User):
 	def __init__ (self):
-		User.__init__(self,"idddd","maiki")
-		self.shopping_cart = ShoppingCart(f"SC{self.user_id}",shop.promotions) # Association ShoppingCart 
+		User.__init__(self,user_id_gen.generateID())
+		self.shopping_cart = ShoppingCart(shop.promotions) # Association ShoppingCart 
 
 	
 
 class Guest(Customer):
 	def	__init__ (self):
-		pass
+		Customer.__init__(self)
 
-	def	register(self):
-		pass
+	def	register(self, username, email, password):
+
+		for customer in self.shop.users:
+			if (username == customer.name):
+				return (0)
+		for user in self.shop.users:
+			if (email == user.account.email):
+				return (0)
+			
+		new_customer = AuthenticationUser(username, email, password)
+		
+		self.shop.users.append(new_customer)
+		return (1)
+
+
+
+		
 
 class AuthenticationUser(Customer):
-	def	__init__ (self, address):
+	def	__init__ (self, username, email, password):
 		Customer.__init__(self)
-		self.address = address
+		self.name = username
+		self.address = None
+		self.account = Account(email, password)
 		self.order = [] # Aggretion Order
 		self.favorite = Favorite() #  Association Favorite
+
+	def set_address(self, new_addr):
+		self.address = new_addr
 
 	def	get_user_detail(self):
 		return (
@@ -228,7 +271,10 @@ class AuthenticationUser(Customer):
 		}
 		)
 	def	get_user_order(self):
-		return ("Yang Mai dai Tum")
+		ret_dict = {}
+		for order in self.order:
+			ret_dict.update({order.order_id : order.get_order_detail()})
+		return (ret_dict)
 
 	def	get_user_favorite(self):
 		return ("Yang Mai dai Tum")
@@ -250,34 +296,24 @@ class	ShoppingCart:
 		return (None)
 
 	def	add_to_cart(self, product, quantity):
+		if (product.stock < quantity):
+			return (0)
 		self.items.append(Item(product, quantity, self.get_promotion(product)))
-	
+		return (1)
+
 	def	show_cart(self):
 		total = 0
 		ret_dict = {}
 		for item in self.items:
-			if (item.promotion != None):
-				total += (item.product.price * (100 - item.promotion.discount)/100 * item.quantity)
-				ret_dict[item.product.name] = {
-					"product_price":item.product.price,
-					"discount":item.promotion.discount,
-					"price_after_discount": item.product.price * (100 - item.promotion.discount)/100 ,
-					"quantity":item.quantity,
-					"price":item.quantity * item.product.price * (100 - item.promotion.discount)/100 
-				}
-			else:
-				total += (item.product.price * item.quantity)
-				ret_dict[item.product.name] = {
-					"product_price":item.product.price,
-					"discount":0,
-					"price_after_discount": item.product.price  ,
-					"quantity":item.quantity,
-					"price":item.quantity * item.product.price
-				}
+			if (item.quantity > item.product.stock):
+				ret_dict.update({"unavailable_item":item.get_item_detail()})
+			else: 
+				ret_dict.update({"available_item":item.get_item_detail()})
 
 		ret_dict["__total"] = total
 		return (ret_dict)
-	
+
+
 	def	new_order(self , order_id, date_crate, user):
 		new = Order(order_id,date_crate, user)
 		new.items = self.items
@@ -344,3 +380,33 @@ class	OrderStatus(Enum):
 	CONFRIMED = 2
 
 
+# guest = Guest()
+# guest.register("nongmaiza","maikittitee@gmail.com","12345678")
+
+# guest2 = Guest()
+# print(guest2.register("maikittiee","maikittite@gmail.com","12345678"))
+
+# print("#### USER IN THE SYSTEM ###")
+# for user in shop.users:
+# 	print(f"{user.name} status: {user.status}")
+
+# guest3 = Guest()
+
+# print(guest3.login("nongmaiza","12345678"))
+
+# print("#### USER IN THE SYSTEM ###")
+# for user in shop.users:
+# 	print(f"{user.name} status: {user.status}")
+
+product_cat = ProductCatalog("aaaa")
+product_cat.add_product("Jelly Tint", 259, "#07", 9, "Magic Lib Tint", "This is detail\nThis lib made by angle that came from heaven\nHave been sell For 10 year",["Lips"])
+product_cat.add_product("EST. HARDDER 2", 229, "#31", 1, "nothing here", "This is another detaikl", ["Lips"])
+product_cat.add_product("Keychorn Q1", 6790, "Blue", 12, "First Keychron custom keyboard","This is magic thing, just but it and type 300wpm",["keyboard","gadget"])
+# promo = Promotion([product_1],"1/1/2022","31/12/2023", 39)
+# promo2 = Promotion([product_2],"1/1/2022","31/12/2023", 100)
+# shop.promotions.append(promo)
+# shop.promotions.append(promo2)
+cart = ShoppingCart(shop.promotions)
+cart.add_to_cart(product_cat.get_inst_product_by_id("1"),1)
+cart.add_to_cart(product_cat.get_inst_product_by_id("3"),12)
+print(cart.show_cart())
