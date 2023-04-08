@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/08 05:06:59 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/09 02:05:51 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,6 +51,7 @@ class Shop:
 		self.product_catalog = [] #AGRET ProductCatalog
 		self.users = [] #AGGRESION User --> # KEEP ONLY ADMIN AND AUTHENTICATIONUSER !!!
 		self.promotions = [] # AGGRESTION Promotion\
+
 
 shop = Shop()
 
@@ -142,6 +143,11 @@ class	Item:
 	# 		"product":self.product.name,
 	# 		"quantity":self.quantity,
 	# 	}
+
+	def	is_available(self):
+		if (self.quantity <=  self.product.stock):
+			return (1)
+		return (0)
 	
 	def get_item_detail(self):
 		ret_dict = {}
@@ -159,7 +165,7 @@ class	Item:
 			ret_dict[self.product.name] = {
 				"product_price":self.product.price,
 				"discount":0,
-				"price_after_discount": self.product.price  ,
+				"price_after_discount": self.product.price,
 				"quantity":self.quantity,
 				"price":self.quantity * self.product.price
 			}
@@ -278,6 +284,14 @@ class AuthenticationUser(Customer):
 
 	def	get_user_favorite(self):
 		return ("Yang Mai dai Tum")
+		
+	def make_purchase(self):
+		new_order = self.shopping_cart.checkout()
+		if (new_order): 
+			self.order.append(self.shopping_cart.checkout())
+			self.shopping_cart.clear()
+			return (1)
+		return (0)
 
 #########################################################
 # --------------------- User Hold --------------------- #
@@ -295,17 +309,39 @@ class	ShoppingCart:
 					return (promotion)
 		return (None)
 
+	def clear(self):
+		self.items = []
+
 	def	add_to_cart(self, product, quantity):
 		if (product.stock < quantity):
 			return (0)
 		self.items.append(Item(product, quantity, self.get_promotion(product)))
 		return (1)
+	
+	def get_item_by_index(self, index):
+		count = 0
+		for item in self.items:
+			if (index == count):
+				return (item)
+			count += 1
+		return (0)
+	
+	def remove_from_cart(self, index_of_item):
+		self.change_quantity(self.get_item_by_index(index_of_item).quantity, index_of_item)
+
+	def	change_quantity(self, num ,index_of_item):
+		count = 0
+		selected_item = self.get_item_by_index(index_of_item)
+		selected_item.quantity += num
+		if (selected_item.quantity == 0):
+			self.items.remove(selected_item)
+
 
 	def	show_cart(self):
 		total = 0
 		ret_dict = {}
 		for item in self.items:
-			if (item.quantity > item.product.stock):
+			if (not item.is_available()):
 				ret_dict.update({"unavailable_item":item.get_item_detail()})
 			else: 
 				ret_dict.update({"available_item":item.get_item_detail()})
@@ -314,10 +350,20 @@ class	ShoppingCart:
 		return (ret_dict)
 
 
-	def	new_order(self , order_id, date_crate, user):
-		new = Order(order_id,date_crate, user)
-		new.items = self.items
-		return new
+	def	checkout(self , order_id, date_crate, user):
+		new_item_list = []
+		for item in self.items:
+			if (item.is_available()):
+				new_item_list.append(item)
+
+		if (len(new_item_list) != 0):	
+			new = Order(order_id,date_crate, user)
+			for item in new_item_list:
+				item.product.stock -= item.quantity
+			new.items = new_item_list
+			return new
+		else:
+			return (0)
 
 class	Favorite:
 	def	__init__ (self):
@@ -331,11 +377,6 @@ class	Order:
 		self.items = [] # Agrettion Items
 		self.ShippingInfo = [] # Agrettion ShippingInfo
 		self.payment = None # Asso Payment
-
-	def	new_order(self , order_id, date_crate, user,cart):
-		new = self.__init__(order_id,date_crate, user)
-		self.items = cart.items
-		return (new)
 	
 	def get_order_detail(self):
 		item_dict = {}
