@@ -6,12 +6,11 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/09 02:28:43 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/09 03:09:51 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # This is a implement of every class that came from class diagram
-# TODO : Relation
 
 from datetime import datetime
 from enum import Enum
