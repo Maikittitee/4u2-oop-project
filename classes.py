@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/09 02:05:51 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/09 02:28:43 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,7 +63,11 @@ class ProductCatalog:
 
 	def	add_product(self, name, price, specify, stock, description, detail, p_type):
 		self.products.append(Product(name,price, description, detail, p_type, stock, specify))
-		# self.last_update = datetime.now().strftime("%d/%m/%Y %H:%M:%S") 
+		# self.last_update = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+	
+	def	delete_product(self, product_id):
+		product = self.get_inst_product_by_id(product_id)
+		self.products.remove(product)  
 
 	def get_product_by_id(self, id):
 		for product in self.products:
