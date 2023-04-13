@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/13 20:24:04 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/14 03:34:17 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,13 +50,11 @@ class Colors:
 ################################################################
 class ProductCatalog:
 	def __init__ (self, first_create):
-		# self.last_update = first_create
 		self.products = []
 
 
 	def	add_product(self, name, price, specify, stock, description, detail, p_type):
 		self.products.append(Product(name,price, description, detail, p_type, stock, specify))
-		# self.last_update = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 	
 	def	delete_product(self, product_id):
 		product = self.get_inst_product_by_id(product_id)
@@ -102,7 +100,7 @@ product_cat = ProductCatalog("aaa")
 class Shop:
 	def __init__(self):
 		self.product_catalog = product_cat #AGRET ProductCatalog
-		self.users = [] #AGGRESION User --> # KEEP ONLY ADMIN AND AUTHENTICATIONUSER !!!
+		self.users = [] #AGGRESION User --> # KEEP ONLY AUTHENTICATIONUSER !!!
 		self.promotions = [] # AGGRESTION Promotion\
 
 	def	add_promotion(self, product_ids, date_start, date_end, discount):
@@ -111,8 +109,13 @@ class Shop:
 			products.append(self.product_catalog.get_inst_product_by_id(product_id))
 		self.promotions.append(Promotion(products, date_start, date_end, discount))
 
-shop = Shop()
+	def	browse_order(self):
+		ret_dict = {}
+		for user in self.users:
+			for order in user.orders:
+				ret_dict.update({user.name : order.get_order_detail()})
 
+shop = Shop()
 
 #########################################################
 # ---------------------- PRODUCT ---------------------- #
@@ -151,12 +154,6 @@ class	Item:
 		self.quantity = quantity
 		self.promotion = promotion # Composition Promotion
 
-	# def	get_item_detail(self):
-	# 	return {
-	# 		"product":self.product.name,
-	# 		"quantity":self.quantity,
-	# 	}
-
 	def	is_available(self):
 		if (self.quantity <=  self.product.stock):
 			return (1)
@@ -165,7 +162,6 @@ class	Item:
 	def get_item_detail(self):
 		ret_dict = {}
 		if (self.promotion != None):
-			# total += (item.product.price * (100 - item.promotion.discount)/100 * item.quantity)
 			ret_dict[self.product.name] = {
 				"product_price":self.product.price,
 				"discount":self.promotion.discount,
@@ -174,7 +170,6 @@ class	Item:
 				"price":self.quantity * self.product.price * (100 - self.promotion.discount)/100 
 			}
 		else:
-			# total += (item.product.price * item.quantity)
 			ret_dict[self.product.name] = {
 				"product_price":self.product.price,
 				"discount":0,
