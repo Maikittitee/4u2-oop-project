@@ -6,17 +6,20 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/13 19:46:10 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/13 20:24:04 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # This is a implement of every class that came from class diagram
 
 from __future__ import annotations
-from datetime import datetime
+from datetime import datetime, date
 from enum import Enum
 from typing import Optional
 from fastapi import FastAPI
+
+
+#current_date = datetime(datetime.year, datetime.month, datetime.day)
 
 class ID:
     def __init__(self):
@@ -182,11 +185,18 @@ class	Item:
 
 		return (ret_dict)
 class	Promotion:
-	def	__init__ (self, product_list:list,date_start, date_end, discount):
+	def	__init__ (self, product_list:list,date_start:datetime, date_end:datetime, discount):
 		self.date_start = date_start
 		self.date_end = date_end
 		self.discount = discount
 		self.products = product_list # COMPOSITION Product
+
+	def is_promotion_available(self):
+		today = datetime(datetime.year, datetime.month, datetime.day)
+		if (self.date_start <= today <= self.date_end):
+			return (1)
+		return (0)
+
 
 
 #########################################################
@@ -308,14 +318,14 @@ class AuthenticationUser(Customer):
 #########################################################
 
 class	ShoppingCart:
-	def __init__ (self, promotions):
-		self.promotions = promotions # Association Promotion (but it accully need to keep ALL Promotion then it's better if we use Shop)
+	def __init__ (self):
+		self.promotions = shop.promotions # Association Promotion (but it accully need to keep ALL Promotion then it's better if we use Shop)
 		self.items = [] # Aggretion Item
 
 	def get_promotion(self, product):
 		for promotion in self.promotions:
 			for avaiable_product in promotion.products :
-				if (avaiable_product is product):
+				if (avaiable_product is product and promotion.is_promotion_available()):
 					return (promotion)
 		return (None)
 
@@ -346,10 +356,18 @@ class	ShoppingCart:
 		if (selected_item.quantity == 0):
 			self.items.remove(selected_item)
 
+	def	check_promotion(self):
+		for item in self.items:
+			if (item.promotion != None and not item.promotion.is_promotion_available()):
+				item.promotion = None
+			
+		
+
 
 	def	show_cart(self):
 		total = 0
 		ret_dict = {}
+		self.check_promotion()
 		for item in self.items:
 			if (not item.is_available()):
 				ret_dict.update({"unavailable_item":item.get_item_detail()})
@@ -360,14 +378,15 @@ class	ShoppingCart:
 		return (ret_dict)
 
 
-	def	checkout(self , order_id, date_crate, user):
+	def	checkout(self , order_id, date_create, user):
 		new_item_list = []
+		self.check_promotion()
 		for item in self.items:
 			if (item.is_available()):
 				new_item_list.append(item)
 
 		if (len(new_item_list) != 0):	
-			new = Order(order_id,date_crate, user)
+			new = Order(order_id, date_create, user)
 			for item in new_item_list:
 				item.product.stock -= item.quantity
 			new.items = new_item_list
@@ -380,10 +399,10 @@ class	Favorite:
 		self.products = [] # Aggretion Product
 
 class	Order:
-	def __init__ (self, order_id, date_crate, user):
+	def __init__ (self, order_id, date_create, user):
 		self.user = user
 		self.order_id = order_id
-		self.date_crate = date_crate
+		self.date_create = date_create
 		self.items = [] # Agrettion Items
 		self.ShippingInfo = [] # Agrettion ShippingInfo
 		self.payment = None # Asso Payment
