@@ -6,16 +6,16 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/09 03:09:51 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/13 19:46:10 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # This is a implement of every class that came from class diagram
 
+from __future__ import annotations
 from datetime import datetime
 from enum import Enum
 from typing import Optional
-import	json
 from fastapi import FastAPI
 
 class ID:
@@ -30,6 +30,7 @@ admin_id_gen = ID()
 user_id_gen = ID()
 cart_id_gen = ID()
 product_id_gen = ID()
+
 class Colors:
     HEADER = '\033[95m'
     BLUE = '\033[94m'
@@ -44,16 +45,6 @@ class Colors:
 ################################################################
 # --------------------- MANAGEMENT CLASS --------------------- #
 ################################################################
-
-class Shop:
-	def __init__(self):
-		self.product_catalog = [] #AGRET ProductCatalog
-		self.users = [] #AGGRESION User --> # KEEP ONLY ADMIN AND AUTHENTICATIONUSER !!!
-		self.promotions = [] # AGGRESTION Promotion\
-
-
-shop = Shop()
-
 class ProductCatalog:
 	def __init__ (self, first_create):
 		# self.last_update = first_create
@@ -102,6 +93,22 @@ class ProductCatalog:
 	def view_product(product_id):
 		# this method need to implement all the same product but difference SPECIFY and each left stock
 		pass
+
+product_cat = ProductCatalog("aaa")
+
+class Shop:
+	def __init__(self):
+		self.product_catalog = product_cat #AGRET ProductCatalog
+		self.users = [] #AGGRESION User --> # KEEP ONLY ADMIN AND AUTHENTICATIONUSER !!!
+		self.promotions = [] # AGGRESTION Promotion\
+
+	def	add_promotion(self, product_ids, date_start, date_end, discount):
+		products = []
+		for product_id in product_ids:
+			products.append(self.product_catalog.get_inst_product_by_id(product_id))
+		self.promotions.append(Promotion(products, date_start, date_end, discount))
+
+shop = Shop()
 
 
 #########################################################
@@ -442,15 +449,15 @@ class	OrderStatus(Enum):
 # for user in shop.users:
 # 	print(f"{user.name} status: {user.status}")
 
-product_cat = ProductCatalog("aaaa")
-product_cat.add_product("Jelly Tint", 259, "#07", 9, "Magic Lib Tint", "This is detail\nThis lib made by angle that came from heaven\nHave been sell For 10 year",["Lips"])
-product_cat.add_product("EST. HARDDER 2", 229, "#31", 1, "nothing here", "This is another detaikl", ["Lips"])
-product_cat.add_product("Keychorn Q1", 6790, "Blue", 12, "First Keychron custom keyboard","This is magic thing, just but it and type 300wpm",["keyboard","gadget"])
-# promo = Promotion([product_1],"1/1/2022","31/12/2023", 39)
-# promo2 = Promotion([product_2],"1/1/2022","31/12/2023", 100)
-# shop.promotions.append(promo)
-# shop.promotions.append(promo2)
-cart = ShoppingCart(shop.promotions)
-cart.add_to_cart(product_cat.get_inst_product_by_id("1"),1)
-cart.add_to_cart(product_cat.get_inst_product_by_id("3"),12)
-print(cart.show_cart())
+# product_cat = ProductCatalog("aaaa")
+# product_cat.add_product("Jelly Tint", 259, "#07", 9, "Magic Lib Tint", "This is detail\nThis lib made by angle that came from heaven\nHave been sell For 10 year",["Lips"])
+# product_cat.add_product("EST. HARDDER 2", 229, "#31", 1, "nothing here", "This is another detaikl", ["Lips"])
+# product_cat.add_product("Keychorn Q1", 6790, "Blue", 12, "First Keychron custom keyboard","This is magic thing, just but it and type 300wpm",["keyboard","gadget"])
+# # promo = Promotion([product_1],"1/1/2022","31/12/2023", 39)
+# # promo2 = Promotion([product_2],"1/1/2022","31/12/2023", 100)
+# # shop.promotions.append(promo)
+# # shop.promotions.append(promo2)
+# cart = ShoppingCart(shop.promotions)
+# cart.add_to_cart(product_cat.get_inst_product_by_id("1"),1)
+# cart.add_to_cart(product_cat.get_inst_product_by_id("3"),12)
+# print(cart.show_cart())
