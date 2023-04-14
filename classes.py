@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/15 02:03:12 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/15 02:30:11 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ admin_id_gen = ID()
 user_id_gen = ID()
 cart_id_gen = ID()
 product_id_gen = ID()
+payment_id_gen = ID()
 
 class Colors:
     HEADER = '\033[95m'
@@ -275,10 +276,6 @@ class Guest(Customer):
 		self.shop.users.append(new_customer)
 		return (1)
 
-
-
-		
-
 class AuthenticationUser(Customer):
 	def	__init__ (self, username, email, password):
 		Customer.__init__(self)
@@ -415,7 +412,7 @@ class	Order:
 		self.date_create = date_create
 		self.items = [] # Agrettion Items
 		self.ShippingInfo = [] # Agrettion ShippingInfo
-		self.payment = None # Asso Payment
+		self.payment = Payment(payment_id_gen.generateID(), 0, OrderStatus.PENDING, self) # Asso Payment
 	
 	def get_order_detail(self):
 		item_dict = {}
@@ -430,6 +427,13 @@ class	Order:
 	
 	def	cal_total(self):
 		pass
+
+	def	make_payment(self, amount):
+		if (amount >= self.cal_total()):
+			self.payment.status = OrderStatus.WAITINGFORCONFIRMED
+		
+	def	confirm_payment(self):
+		self.payment.status = OrderStatus.CONFRIMED
 
 
 class	Payment:
@@ -457,7 +461,8 @@ class	ShippingStatus(Enum):
 class	OrderStatus(Enum):
 	CANCELED = 0
 	PENDING = 1
-	CONFRIMED = 2
+	WAITINGFORCONFIRMED = 2
+	CONFRIMED = 3
 
 
 # guest = Guest()
