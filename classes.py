@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/14 03:34:17 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/15 02:03:12 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -94,6 +94,19 @@ class ProductCatalog:
 	def view_product(product_id):
 		# this method need to implement all the same product but difference SPECIFY and each left stock
 		pass
+	
+	def	modify_product(self, target_product_id,product_name:str, product_price:int, product_description: str, product_detail : str, product_type : list, product_stock : int, product_specify : str):
+		product = self.get_inst_product_by_id(target_product_id)
+		if (product_price < 0 or product_stock < 0):
+			return (0)
+		product.name = product_name
+		product.price = product_price
+		product.description = product_description
+		product.detail = product_detail
+		product.type = product_type
+		product.stock = product_stock
+		product.specify = product_specify
+		return (product)
 
 product_cat = ProductCatalog("aaa")
 
@@ -114,6 +127,8 @@ class Shop:
 		for user in self.users:
 			for order in user.orders:
 				ret_dict.update({user.name : order.get_order_detail()})
+	
+	
 
 shop = Shop()
 
