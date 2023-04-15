@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/15 23:32:02 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/15 23:56:20 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -284,7 +284,7 @@ class AuthenticationUser(Customer):
 		self.address = None
 		self.account = Account(email, password)
 		self.order = [] # Aggretion Order
-		self.favorite = Favorite() #  Association Favorite
+		self.favorite = []
 
 	def set_address(self, new_addr):
 		self.address = new_addr
@@ -379,8 +379,16 @@ class	ShoppingCart:
 			else: 
 				ret_dict.update({"available_item":item.get_item_detail()})
 
-		ret_dict["__total"] = total
+		ret_dict["__total"] = self.cal_total()
 		return (ret_dict)
+	
+	def	cal_total(self):
+		total = 0
+		self.check_promotion()
+		for item in self.items:
+			if (item.is_available()):
+				total += item.product.price * (100 - item.promotion.discount)/100 * item.quantity
+		return (total)
 
 	def	checkout(self , order_id, date_create, user):
 		new_item_list = []
@@ -397,10 +405,6 @@ class	ShoppingCart:
 			return new
 		else:
 			return (0)
-
-class	Favorite:
-	def	__init__ (self):
-		self.products = [] # Aggretion Product
 
 class	Order:
 	def __init__ (self, order_id, date_create, user):
@@ -423,7 +427,10 @@ class	Order:
 		}
 	
 	def	cal_total(self):
-		pass
+		total = 0
+		for item in self.items:
+			total += item.product.price * (100 - item.promotion.discount)/100 * item.quantity
+		return (total)
 
 	def	make_payment(self, amount):
 		if (amount >= self.cal_total()):
