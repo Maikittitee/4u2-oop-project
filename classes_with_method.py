@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    classes.py                                         :+:      :+:    :+:    #
+#    classes_with_method.py                             :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/15 23:56:20 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/16 00:26:43 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,7 +60,7 @@ class ProductCatalog:
 		product = self.get_inst_product_by_id(product_id)
 		self.products.remove(product)  
 
-	def get_product_by_id(self, id):
+	def get_product_detail_by_id(self, id):
 		for product in self.products:
 			if (product.id == id):
 				return (product.get_product_detail())
@@ -69,6 +69,14 @@ class ProductCatalog:
 		for product in self.products:
 			if (product.id == id):
 				return (product)
+			
+	def get_products_by_id(self, id):
+		products = []
+		target_product_name = self.get_inst_product_by_id(id).name
+		for product in self.products:
+			if (product.name == target_product_name):
+				products.append(product)
+		return (products)
 
 	def	browse_product (self, name : Optional[str] = None, type_input : Optional[str] = None) -> None:
 		product_list = []
@@ -91,10 +99,25 @@ class ProductCatalog:
 		ret_dict["__count_product"] = count_product
 		return (ret_dict)
 	
-	def view_product(product_id):
+	def view_product(self, product_id):
 		# this method need to implement all the same product but difference SPECIFY and each left stock
-		pass
-	
+		products = self.get_products_by_id(product_id)
+		specify_dict = {}
+		for product in products:
+			specify_dict.update({product.specify: product.stock})
+			p2 = product
+		p1 = products[0]
+		ret_dict = {
+		"id" : 		f"{p1.id}-{p2.id}", 
+		"name" :	p1.name,
+		"price" : 	p1.price, 
+		"description" : p1.description, 
+		"detail" : p1.detail, 
+		"type" : p1.type,
+		"specify" : specify_dict
+		}
+		return (ret_dict)
+		
 	def	modify_product(self, target_product_id,product_name=None, product_price=None, product_description=None, product_detail=None, product_type=None, product_stock=None, product_specify=None):
 		product = self.get_inst_product_by_id(target_product_id)
 		if (product_price != None and product_stock != None and (product_price < 0 or product_stock < 0)):
@@ -224,7 +247,7 @@ class	UserStatus(Enum):
 	ONLINE = 1
 	OFFLINE = 0
 
-class User: #ABTRACT CLASS
+class User: #ABTRACT CLASS ...... STOPPPP DONT ASK ME ANYTHING > EVERY CLASS CAN BE ABTRACT CLASS
 	def	__init__(self,id):
 		self.user_id = id
 		self.name = None
@@ -242,7 +265,7 @@ class User: #ABTRACT CLASS
 		return (0)
 
 	def	logout(self):
-		pass
+		self.status = UserStatus.OFFLINE
 
 class Admin(User):
 	count = 0
@@ -379,7 +402,7 @@ class	ShoppingCart:
 			else: 
 				ret_dict.update({"available_item":item.get_item_detail()})
 
-		ret_dict["__total"] = self.cal_total()
+		ret_dict["total"] = self.cal_total()
 		return (ret_dict)
 	
 	def	cal_total(self):
@@ -475,34 +498,3 @@ class	OrderStatus(Enum):
 	WAITINGFORCONFIRMED = 2
 	CONFRIMED = 3
 
-
-# guest = Guest()
-# guest.register("nongmaiza","maikittitee@gmail.com","12345678")
-
-# guest2 = Guest()
-# print(guest2.register("maikittiee","maikittite@gmail.com","12345678"))
-
-# print("#### USER IN THE SYSTEM ###")
-# for user in shop.users:
-# 	print(f"{user.name} status: {user.status}")
-
-# guest3 = Guest()
-
-# print(guest3.login("nongmaiza","12345678"))
-
-# print("#### USER IN THE SYSTEM ###")
-# for user in shop.users:
-# 	print(f"{user.name} status: {user.status}")
-
-# product_cat = ProductCatalog("aaaa")
-# product_cat.add_product("Jelly Tint", 259, "#07", 9, "Magic Lib Tint", "This is detail\nThis lib made by angle that came from heaven\nHave been sell For 10 year",["Lips"])
-# product_cat.add_product("EST. HARDDER 2", 229, "#31", 1, "nothing here", "This is another detaikl", ["Lips"])
-# product_cat.add_product("Keychorn Q1", 6790, "Blue", 12, "First Keychron custom keyboard","This is magic thing, just but it and type 300wpm",["keyboard","gadget"])
-# # promo = Promotion([product_1],"1/1/2022","31/12/2023", 39)
-# # promo2 = Promotion([product_2],"1/1/2022","31/12/2023", 100)
-# # shop.promotions.append(promo)
-# # shop.promotions.append(promo2)
-# cart = ShoppingCart(shop.promotions)
-# cart.add_to_cart(product_cat.get_inst_product_by_id("1"),1)
-# cart.add_to_cart(product_cat.get_inst_product_by_id("3"),12)
-# print(cart.show_cart())

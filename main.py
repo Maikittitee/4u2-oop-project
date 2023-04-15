@@ -1,6 +1,6 @@
-from classes import *
+from classes_with_method import *
 from datetime import datetime
-from classes import shop
+from classes_with_method import shop
 from fastapi import FastAPI
 
 
