@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/15 02:30:11 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/15 23:32:02 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,6 @@ from __future__ import annotations
 from datetime import datetime, date
 from enum import Enum
 from typing import Optional
-from fastapi import FastAPI
 
 
 #current_date = datetime(datetime.year, datetime.month, datetime.day)
@@ -96,17 +95,24 @@ class ProductCatalog:
 		# this method need to implement all the same product but difference SPECIFY and each left stock
 		pass
 	
-	def	modify_product(self, target_product_id,product_name:str, product_price:int, product_description: str, product_detail : str, product_type : list, product_stock : int, product_specify : str):
+	def	modify_product(self, target_product_id,product_name=None, product_price=None, product_description=None, product_detail=None, product_type=None, product_stock=None, product_specify=None):
 		product = self.get_inst_product_by_id(target_product_id)
-		if (product_price < 0 or product_stock < 0):
+		if (product_price != None and product_stock != None and (product_price < 0 or product_stock < 0)):
 			return (0)
-		product.name = product_name
-		product.price = product_price
-		product.description = product_description
-		product.detail = product_detail
-		product.type = product_type
-		product.stock = product_stock
-		product.specify = product_specify
+		if (product_name != None):
+			product.name = product_name
+		if (product_price != None):
+			product.price = product_price
+		if (product_description != None):
+			product.description = product_description
+		if (product_detail != None):
+			product.detail = product_detail
+		if (product_type != None):
+			product.type = product_type
+		if (product_stock != None):
+			product.stock = product_stock
+		if (product_specify != None):
+			product.specify = product_specify
 		return (product)
 
 product_cat = ProductCatalog("aaa")
@@ -129,8 +135,6 @@ class Shop:
 			for order in user.orders:
 				ret_dict.update({user.name : order.get_order_detail()})
 	
-	
-
 shop = Shop()
 
 #########################################################
@@ -208,8 +212,6 @@ class	Promotion:
 			return (1)
 		return (0)
 
-
-
 #########################################################
 # ----------------------- USER ------------------------ #
 #########################################################
@@ -217,7 +219,6 @@ class Account:
 	def __init__ (self, email, password):
 		self.email = email
 		self.password = password
-
 
 class	UserStatus(Enum):
 	ONLINE = 1
@@ -368,9 +369,6 @@ class	ShoppingCart:
 			if (item.promotion != None and not item.promotion.is_promotion_available()):
 				item.promotion = None
 			
-		
-
-
 	def	show_cart(self):
 		total = 0
 		ret_dict = {}
@@ -383,7 +381,6 @@ class	ShoppingCart:
 
 		ret_dict["__total"] = total
 		return (ret_dict)
-
 
 	def	checkout(self , order_id, date_create, user):
 		new_item_list = []
@@ -411,7 +408,7 @@ class	Order:
 		self.order_id = order_id
 		self.date_create = date_create
 		self.items = [] # Agrettion Items
-		self.ShippingInfo = [] # Agrettion ShippingInfo
+		self.shipping_info = None # Agrettion ShippingInfo
 		self.payment = Payment(payment_id_gen.generateID(), 0, OrderStatus.PENDING, self) # Asso Payment
 	
 	def get_order_detail(self):
@@ -434,8 +431,16 @@ class	Order:
 		
 	def	confirm_payment(self):
 		self.payment.status = OrderStatus.CONFRIMED
+		self.shipping_info = ShippingInfo(self.user.address, ShippingStatus.NONSHIP, None, None)
 
-
+	def	edit_shipping_info(self, address = None,  date_shipping = None, date_delivered = None):
+		if (address != None):
+			self.shipping_info.address = address
+		if (date_shipping != None):
+			self.date_shipping = date_shipping
+		if (date_delivered != None):
+			self.date_delivered = date_delivered
+		
 class	Payment:
 	def	__init__ (self, payment_id, amount, status, order):
 		self.order = order
@@ -444,10 +449,9 @@ class	Payment:
 		self.status = status
 
 class	ShippingInfo:
-	def	__init__ (self, shipping_id, shipping_status, tracking_number, date_shipping, date_delivered):
-		self.shipping_id = shipping_id
+	def	__init__ (self, address,shipping_status, date_shipping, date_delivered):
 		self.shipping_status = shipping_status
-		self.tracking_number = tracking_number
+		self.address = address
 		self.date_shipping = date_shipping
 		self.date_delivered = date_delivered
 
