@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/16 00:26:43 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/16 02:55:42 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ user_id_gen = ID()
 cart_id_gen = ID()
 product_id_gen = ID()
 payment_id_gen = ID()
-
+order_id_gen = ID()
 class Colors:
     HEADER = '\033[95m'
     BLUE = '\033[94m'
@@ -157,6 +157,12 @@ class Shop:
 		for user in self.users:
 			for order in user.orders:
 				ret_dict.update({user.name : order.get_order_detail()})
+
+	def get_user_by_username(self, username):
+		for user in self.users:
+			if (user.name == username):
+				return (user)
+		return (None)
 	
 shop = Shop()
 
@@ -198,7 +204,7 @@ class	Item:
 		self.promotion = promotion # Composition Promotion
 
 	def	is_available(self):
-		if (self.quantity <=  self.product.stock):
+		if (self.quantity <= self.product.stock):
 			return (1)
 		return (0)
 	
@@ -223,14 +229,16 @@ class	Item:
 
 		return (ret_dict)
 class	Promotion:
-	def	__init__ (self, product_list:list,date_start:datetime, date_end:datetime, discount):
+	def	__init__ (self, product_list:list,date_start, date_end, discount):
 		self.date_start = date_start
 		self.date_end = date_end
 		self.discount = discount
 		self.products = product_list # COMPOSITION Product
 
 	def is_promotion_available(self):
-		today = datetime(datetime.year, datetime.month, datetime.day)
+		today = datetime.now()
+		if (self.date_end == None or self.date_start == None):
+			return (1)
 		if (self.date_start <= today <= self.date_end):
 			return (1)
 		return (0)
@@ -270,7 +278,7 @@ class User: #ABTRACT CLASS ...... STOPPPP DONT ASK ME ANYTHING > EVERY CLASS CAN
 class Admin(User):
 	count = 0
 	def __init__ (self, name,salary, shop, username, email, password):
-		User.__init__(self,f"admin{admin_id_gen.generateID()}",name)
+		User.__init__(self,f"admin{admin_id_gen.generateID()}")
 		self.account = Account(email, password) 
 		self.salary = salary
 		self.name = username
@@ -278,7 +286,7 @@ class Admin(User):
 class Customer(User):
 	def __init__ (self):
 		User.__init__(self,user_id_gen.generateID())
-		self.shopping_cart = ShoppingCart(shop.promotions) # Association ShoppingCart 
+		self.shopping_cart = ShoppingCart() # Association ShoppingCart 
 
 	
 
@@ -298,7 +306,7 @@ class Guest(Customer):
 		new_customer = AuthenticationUser(username, email, password)
 		
 		self.shop.users.append(new_customer)
-		return (1)
+		return (new_customer)
 
 class AuthenticationUser(Customer):
 	def	__init__ (self, username, email, password):
@@ -308,6 +316,12 @@ class AuthenticationUser(Customer):
 		self.account = Account(email, password)
 		self.order = [] # Aggretion Order
 		self.favorite = []
+
+	def	get_order_by_id(self, order_id):
+		for order in self.order:
+			if (order.order_id == order_id):
+				return (order)
+		return (None)
 
 	def set_address(self, new_addr):
 		self.address = new_addr
@@ -337,12 +351,17 @@ class AuthenticationUser(Customer):
 		return ("Yang Mai dai Tum")
 		
 	def make_purchase(self):
-		new_order = self.shopping_cart.checkout()
+		new_order = self.shopping_cart.checkout(self)
 		if (new_order): 
-			self.order.append(self.shopping_cart.checkout())
+			self.order.append(new_order)
 			self.shopping_cart.clear()
 			return (1)
 		return (0)
+	
+	def	make_payment(self, order_id, evi):
+		order = self.get_order_by_id(order_id)
+
+
 
 #########################################################
 # --------------------- User Hold --------------------- #
@@ -358,7 +377,7 @@ class	ShoppingCart:
 			for avaiable_product in promotion.products :
 				if (avaiable_product is product and promotion.is_promotion_available()):
 					return (promotion)
-		return (None)
+		return (Promotion([product], None, None, 0))
 
 	def clear(self):
 		self.items = []
@@ -394,13 +413,16 @@ class	ShoppingCart:
 			
 	def	show_cart(self):
 		total = 0
-		ret_dict = {}
+		ret_dict = {
+			"available_item": {},
+			"unavailable_item": {}	
+		}
 		self.check_promotion()
 		for item in self.items:
-			if (not item.is_available()):
-				ret_dict.update({"unavailable_item":item.get_item_detail()})
-			else: 
-				ret_dict.update({"available_item":item.get_item_detail()})
+			if (item.is_available()):
+				ret_dict["available_item"].update(item.get_item_detail())
+			else:
+				ret_dict["unavailable_item"].update(item.get_item_detail())
 
 		ret_dict["total"] = self.cal_total()
 		return (ret_dict)
@@ -413,7 +435,7 @@ class	ShoppingCart:
 				total += item.product.price * (100 - item.promotion.discount)/100 * item.quantity
 		return (total)
 
-	def	checkout(self , order_id, date_create, user):
+	def	checkout(self,user):
 		new_item_list = []
 		self.check_promotion()
 		for item in self.items:
@@ -421,7 +443,7 @@ class	ShoppingCart:
 				new_item_list.append(item)
 
 		if (len(new_item_list) != 0):	
-			new = Order(order_id, date_create, user)
+			new = Order(order_id_gen.generateID(), datetime.now(), user)
 			for item in new_item_list:
 				item.product.stock -= item.quantity
 			new.items = new_item_list
@@ -433,7 +455,7 @@ class	Order:
 	def __init__ (self, order_id, date_create, user):
 		self.user = user
 		self.order_id = order_id
-		self.date_create = date_create
+		self.date_create = str(date_create)
 		self.items = [] # Agrettion Items
 		self.shipping_info = None # Agrettion ShippingInfo
 		self.payment = Payment(payment_id_gen.generateID(), 0, OrderStatus.PENDING, self) # Asso Payment
@@ -443,10 +465,12 @@ class	Order:
 		for item in self.items:
 			item_dict.update({item.product.id:item.get_item_detail()})
 		return {
-			"user":self.user,
+			"user":self.user.name,
 			"id":self.order_id,
-			"create":self.date_crate,
-			"items":item_dict
+			"payment_status":str(self.payment.status),
+			"create":self.date_create,
+			"items":item_dict,
+			"total":self.cal_total()
 		}
 	
 	def	cal_total(self):
@@ -457,11 +481,10 @@ class	Order:
 
 	def	make_payment(self, amount):
 		if (amount >= self.cal_total()):
-			self.payment.status = OrderStatus.WAITINGFORCONFIRMED
-		
-	def	confirm_payment(self):
-		self.payment.status = OrderStatus.CONFRIMED
-		self.shipping_info = ShippingInfo(self.user.address, ShippingStatus.NONSHIP, None, None)
+			self.payment.status = OrderStatus.CONFIRMED
+			self.shipping_info = ShippingInfo(self.user.address, ShippingStatus.NONSHIP, None, None)
+			return (1)
+		return (0)
 
 	def	edit_shipping_info(self, address = None,  date_shipping = None, date_delivered = None):
 		if (address != None):
@@ -477,6 +500,7 @@ class	Payment:
 		self.payment_id = payment_id
 		self.amount = amount
 		self.status = status
+		self.evidence = None
 
 class	ShippingInfo:
 	def	__init__ (self, address,shipping_status, date_shipping, date_delivered):
@@ -495,6 +519,5 @@ class	ShippingStatus(Enum):
 class	OrderStatus(Enum):
 	CANCELED = 0
 	PENDING = 1
-	WAITINGFORCONFIRMED = 2
-	CONFRIMED = 3
+	CONFIRMED = 2
 
