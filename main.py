@@ -2,31 +2,12 @@ from classes_with_method import *
 from datetime import datetime
 from classes_with_method import shop
 from fastapi import FastAPI
+from typing import Optional
+from scene import *
 
 
 
-# current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-# product_cat = ProductCatalog(current_time)
-# product_cat.add_product("Jelly Tint", 259, "#07", 9, "Magic Lib Tint", "This is detail\nThis lib made by angle that came from heaven\nHave been sell For 10 year",["Lips"])
-# product_cat.add_product("EST. HARDDER 2", 229, "#31", 1, "nothing here", "This is another detaikl", ["Lips"])
-# product_cat.add_product("Keychorn Q1", 6790, "Blue", 12, "First Keychron custom keyboard","This is magic thing, just but it and type 300wpm",["keyboard","gadget"])
-# # promo = Promotion([product_1],"1/1/2022","31/12/2023", 39)
-# # promo2 = Promotion([product_2],"1/1/2022","31/12/2023", 100)
-# # product_cat.products.append(product_1)
-# # product_cat.products.append(product_2)
-# # shop.promotions.append(promo)
-# # shop.promotions.append(promo2)
-# # shop.promotions.append(promo2)
-# cart = ShoppingCart(shop.promotions)
-# cart.add_to_cart(product_cat.get_inst_product_by_id("1"),1)
-# cart.add_to_cart(product_cat.get_inst_product_by_id("3"),1)
 
-# # cart.add_to_cart(product_1,3)
-# # cart.add_to_cart(product_2,2)
-# admin_1 = Admin("Nonene",2000,shop)
-# admin_2 = Admin("Peachji",1,shop)
-
-# print(cart.show_cart())
 app = FastAPI()
 
 @app.get("/")
@@ -34,31 +15,31 @@ def	root():
 	return ({"msg":"Welcome to root path, there are nothing here, better specofic path  , for example , /products or /users"})
 
 
+
+# example 127.0.0.1:58742/Products?name=Keychron
+# example 127.0.0.1:58742/Products?in_type=Lips
 @app.get("/Products")
-def	products():
-	return (product_cat.browse_product(None, None))
-
-
-@app.get("/Products/name/{name}")
-def	products(name):
-	return (product_cat.browse_product(name, None))
-
-
-@app.get("/Products/type/{type_ip}")
-def	products(type_ip:str):
-	return (product_cat.browse_product(None, type_ip))
+def	products(name:Optional[str] = None, in_type:Optional[str] = None):
+	return (product_cat.browse_product(name, in_type))
 
 @app.get("/Products/{id}")
 def	view_products(id : str):
-	return (product_cat.get_product_by_id(id))
+	return (product_cat.view_product(id))
 
-# input_dict = 
-order_id_gen = ID()
+@app.get("/Users/{username}")
+def	view_user(username : str):
+	# need to check searching name is a guy who search or not ... but how?
+	return (shop.get_user_by_username(username).get_user_detail())
 
-@app.post("/users/user/cart/checkout")
-def make_purchase():	
-	od = cart.new_order(order_id_gen.generateID(),current_time,"thisIsAName")
-	return (od.get_order_detail())
+@app.get("/Users/{username}/cart")
+def	view_cart(username : str):
+	# need to check searching name is a guy who search or not ... but how?
+	return (shop.get_user_by_username(username).shopping_cart.show_cart())
+
+# @app.post("/users/{username}/cart/checkout")
+# def make_purchase():	
+# 	od = cart.new_order(order_id_gen,current_time,"thisIsAName")
+# 	return (od.get_order_detail())
 
 
 

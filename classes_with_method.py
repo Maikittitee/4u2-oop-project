@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/16 02:55:42 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/17 03:16:04 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -210,22 +210,23 @@ class	Item:
 	
 	def get_item_detail(self):
 		ret_dict = {}
-		if (self.promotion != None):
-			ret_dict[self.product.name] = {
-				"product_price":self.product.price,
-				"discount":self.promotion.discount,
-				"price_after_discount": self.product.price * (100 - self.promotion.discount)/100 ,
-				"quantity":self.quantity,
-				"price":self.quantity * self.product.price * (100 - self.promotion.discount)/100 
-			}
-		else:
-			ret_dict[self.product.name] = {
-				"product_price":self.product.price,
-				"discount":0,
-				"price_after_discount": self.product.price,
-				"quantity":self.quantity,
-				"price":self.quantity * self.product.price
-			}
+		# if (self.promotion != None):
+		ret_dict[self.product.id] = {
+			"product_name":self.product.name,
+			"product_price":self.product.price,
+			"discount":self.promotion.discount,
+			"price_after_discount": self.product.price * (100 - self.promotion.discount)/100 ,
+			"quantity":self.quantity,
+			"price":self.quantity * self.product.price * (100 - self.promotion.discount)/100 
+		}
+		# else:
+		# 	ret_dict[self.product.name] = {
+		# 		"product_price":self.product.price,
+		# 		"discount":0,
+		# 		"price_after_discount": self.product.price,
+		# 		"quantity":self.quantity,
+		# 		"price":self.quantity * self.product.price
+		# 	}
 
 		return (ret_dict)
 class	Promotion:
