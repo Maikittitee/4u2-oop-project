@@ -24,11 +24,14 @@ customer.make_purchase()
 print(f"{Colors.HEADER}#############\n#   ORDER   #\n#############{Colors.ENDC}")
 print(json.dumps(customer.get_user_order(), indent = 4))
 
-print(customer.get_order_by_id("1").make_payment(100000000))
+# print(customer.get_order_by_id("1").make_payment(100000000))
 
-print(f"{Colors.HEADER}#############\n#   ORDER NEWWWW  #\n#############{Colors.ENDC}")
-print(json.dumps(customer.get_user_order(), indent = 4))
+# print(f"{Colors.HEADER}#############\n#   ORDER NEWWWW  #\n#############{Colors.ENDC}")
+# print(json.dumps(customer.get_user_order(), indent = 4))
 
+
+print(f"{Colors.HEADER}#############\n#   USER DETAIL  #\n#############{Colors.ENDC}")
+print(json.dumps(customer.get_user_detail(), indent=4))
 # print(product_cat.get_inst_product_by_id("1"));
 # print(product_cat.get_inst_product_by_id("2"));
 
