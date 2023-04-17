@@ -420,4 +420,12 @@ form {
     transform: translate(-50%, -50%);
 }
 
+.text0_1{
+    color: black;
+    font-size: 30px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    text-align: center;
+}
 
