@@ -429,3 +429,29 @@ form {
     text-align: center;
 }
 
+.text2_1{
+    color: black;
+    font-size: 30px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    text-align: center;
+}
+
+.text2_2{
+    color: #666f78;
+    font-size: 24px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    text-align: center;
+}
+
+.text2_3{
+    color: #666f78;
+    font-size: 16px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    text-align: center;
+}
