@@ -382,3 +382,42 @@ form {
     text-align: center;
     
 }
+
+.text1_1{
+    color: black;
+    font-size: 30px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    text-align: center;
+}
+
+.text1_2{
+    color: black;
+    font-size: 30px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    text-align: center;
+}
+
+.text1_3{
+    font-size: 15px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    color: #0000008A;
+    text-align: center;
+}
+
+.textbox{
+    margin-left: 38%;
+}
+
+.button1 {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
