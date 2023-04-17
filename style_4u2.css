@@ -93,6 +93,20 @@ ul.nav-topmenu>li.nav-item>a.nav-link{
 .nav-mini.dropdown-menu{
     float: none;
 }
+/* .dropdown-menu{
+    padding: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    min-width: 10rem;
+    font-size: 1rem;
+    color: #212529;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    background-clip: padding-box;
+} */
 
 .dropdown{
     position: relative
@@ -137,75 +151,13 @@ ul{
 
 }
 
-
-
-
-.text1{
-    color: black;
-    font-size: 30px;
+/* ul.nav-topmenu.nav-mini>li.nav-item.dropdown>ul.dropdown-menu>li>a{
+    font-size: 14px;
     font-family: 'Mitr', sans-serif;
-    font-weight: bold;
+    color: #989292;
+    font-weight: normal;
     font-style: normal;
-    text-align: center;
-    
 }
-
-.text2{
-    color: #ff0000;
-    font-family: 'Mitr', sans-serif;
-    font-weight: bold;
-    font-style: normal;
-    text-align: center;
-}
-
-
-.text3{
-    color: #666f78;
-    font-family: 'Mitr', sans-serif;
-    font-weight: bold;
-    font-style: normal;
-    text-align: center;
-}
-
-.text4{
-    color: #666f78;
-    font-family: 'Mitr', sans-serif;
-    font-weight: bold;
-    font-style: normal;
-    text-align: center;
-}
-
-
-
-.text5{
-    color: #666f78;
-    font-family: 'Mitr', sans-serif;
-    font-weight: bold;
-    font-style: normal;
-    text-align: center;
-}
-
-
-.text6{
-    color: #ff0000;
-    font-family: 'Mitr', sans-serif;
-    font-weight: bold;
-    font-style: normal;
-    text-align: center;
-}
-
-.text7{
-    color: #ff0000;
-    font-family: 'Mitr', sans-serif;
-    font-weight: bold;
-    font-style: normal;
-    text-align: center;
-    
-}
-
-.center {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    
-}
+.nav-mini.dropdown-menu.dropdown-item{
+    padding: 6px 20px;
+} */
