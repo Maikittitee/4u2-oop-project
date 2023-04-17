@@ -14,17 +14,15 @@ app = FastAPI()
 def	root():
 	return ({"msg":"Welcome to root path, there are nothing here, better specofic path  , for example , /products or /users"})
 
-
-
 # example 127.0.0.1:58742/Products?name=Keychron
 # example 127.0.0.1:58742/Products?in_type=Lips
 @app.get("/Products")
 def	products(name:Optional[str] = None, in_type:Optional[str] = None):
 	return (product_cat.browse_product(name, in_type))
 
-@app.get("/Products/{id}")
-def	view_products(id : str):
-	return (product_cat.view_product(id))
+@app.get("/Products/{product_id}")
+def	view_product(product_id : str):
+	return (product_cat.view_product(product_id))
 
 @app.get("/Users/{username}")
 def	view_user(username : str):
@@ -35,6 +33,14 @@ def	view_user(username : str):
 def	view_cart(username : str):
 	# need to check searching name is a guy who search or not ... but how?
 	return (shop.get_user_by_username(username).shopping_cart.show_cart())
+
+@app.post("Products/{product_id}/add_to_cart")
+def	add_to_cart(username, product_id, quantity):
+	if (shop.get_user_by_username(username).shopping_cart.add_to_cart(product_cat.get_inst_product_by_id(product_id), quantity))
+		return ("OK")
+	return ("KO")
+
+
 
 # @app.post("/users/{username}/cart/checkout")
 # def make_purchase():	
