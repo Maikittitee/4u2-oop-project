@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/17 03:16:04 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/17 16:50:20 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -219,16 +219,8 @@ class	Item:
 			"quantity":self.quantity,
 			"price":self.quantity * self.product.price * (100 - self.promotion.discount)/100 
 		}
-		# else:
-		# 	ret_dict[self.product.name] = {
-		# 		"product_price":self.product.price,
-		# 		"discount":0,
-		# 		"price_after_discount": self.product.price,
-		# 		"quantity":self.quantity,
-		# 		"price":self.quantity * self.product.price
-		# 	}
-
 		return (ret_dict)
+
 class	Promotion:
 	def	__init__ (self, product_list:list,date_start, date_end, discount):
 		self.date_start = date_start
