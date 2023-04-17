@@ -40,6 +40,11 @@ def	add_to_cart(username, product_id, quantity):
 		return ("OK")
 	return ("KO")
 
+@app.post("/User/{username}/cart/checkout")
+def	make_purchase(username):
+	if (shop.get_user_by_username(username).make_purchase())
+		return ("OK")
+	return ("KO")
 
 
 # @app.post("/users/{username}/cart/checkout")
