@@ -371,4 +371,14 @@ form {
     position: absolute;
     left: 50%;
     transform: translate(-50%, -50%);
-  }
+}
+
+.text-1{
+    color: black;
+    font-size: 30px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    text-align: center;
+    
+}
