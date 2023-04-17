@@ -93,20 +93,6 @@ ul.nav-topmenu>li.nav-item>a.nav-link{
 .nav-mini.dropdown-menu{
     float: none;
 }
-/* .dropdown-menu{
-    padding: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1000;
-    display: none;
-    min-width: 10rem;
-    font-size: 1rem;
-    color: #212529;
-    text-align: left;
-    list-style: none;
-    background-color: #fff;
-    background-clip: padding-box;
-} */
 
 .dropdown{
     position: relative
@@ -151,13 +137,238 @@ ul{
 
 }
 
-/* ul.nav-topmenu.nav-mini>li.nav-item.dropdown>ul.dropdown-menu>li>a{
-    font-size: 14px;
+
+
+
+.text1{
+    color: black;
+    font-size: 30px;
     font-family: 'Mitr', sans-serif;
-    color: #989292;
+    font-weight: bold;
+    font-style: normal;
+    text-align: center;
+    
+}
+
+.text2{
+    color: #ff0000;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    text-align: center;
+}
+
+
+.text3{
+    color: #666f78;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    text-align: center;
+}
+
+.text4{
+    color: #666f78;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    text-align: center;
+}
+
+
+
+.text5{
+    color: #666f78;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    text-align: center;
+}
+
+
+.text6{
+    color: #ff0000;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    text-align: center;
+}
+
+.text7{
+    color: #ff0000;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    text-align: center;
+    
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+
+.text_1{
+    color: black;
+    font-size: 30px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    text-align: center;
+    
+}
+
+.text_2{
+    font-size: 15px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    color: black;
+    padding-left: 30%;
+}
+
+.text_3{
+    font-size: 12px;
+    font-family: 'Mitr', sans-serif;
     font-weight: normal;
     font-style: normal;
+    color: #0000008A;
+    padding-left: 30%;
 }
-.nav-mini.dropdown-menu.dropdown-item{
-    padding: 6px 20px;
-} */
+
+.text_4{
+    font-size: 15px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    color: black;
+    padding-left: 30%;
+}
+
+.text_5{
+    font-size: 15px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    color: black;
+    padding-left: 30%;
+}
+
+.text_6{
+    font-size: 15px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    color: black;
+    padding-left: 30%;
+}
+
+.text_7{
+    font-size: 15px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    color: black;
+    padding-left: 30%;
+}
+
+.text_8{
+    font-size: 15px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    color: black;
+    padding-left: 30%;
+}
+
+.text_9{
+    font-size: 15px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    color: black;
+    padding-left: 30%;
+}
+
+.text_10{
+    font-size: 15px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    color: black;
+    padding-left: 30%;
+}
+
+.text_11{
+    font-size: 15px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    color: black;
+    padding-left: 30%;
+}
+
+.text_12{
+    font-size: 15px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    color: black;
+    padding-left: 30%;
+}
+
+.text_13{
+    font-size: 15px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    color: black;
+    padding-left: 30%;
+}
+
+.text_14{
+    font-size: 12px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    color: #0000008A;
+    padding-left: 30%;
+}
+
+.text_15{
+    font-size: 15px;
+    font-family: 'Mitr', sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    color: black;
+    padding-left: 30%;
+}
+
+.box{
+    margin-left: 30%;
+}
+
+.how_to_pay{
+    position: absolute;
+    left: 30%;
+}
+
+.img{
+    display: block;
+    margin-left: 30%;
+    margin-right: auto;
+}
+
+form {
+    position: absolute;
+    left: 30%;
+}
+
+.button {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
