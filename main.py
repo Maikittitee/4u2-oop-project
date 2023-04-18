@@ -12,7 +12,7 @@ app = FastAPI()
 
 @app.get("/")
 def	root():
-	return ({"msg":"Welcome to root path, there are nothing here, better specofic path  , for example , /products or /users"})
+	return ({"msg":"Welcome to root path, there are nothing here, better give a specific path  , for example , /Products or /Users"})
 
 # example 127.0.0.1:58742/Products?name=Keychron
 # example 127.0.0.1:58742/Products?in_type=Lips
@@ -45,6 +45,8 @@ def	make_purchase(username):
 	if (shop.get_user_by_username(username).make_purchase()):
 		return ("OK")
 	return ("KO")
+
+
 
 
 # @app.post("/users/{username}/cart/checkout")
