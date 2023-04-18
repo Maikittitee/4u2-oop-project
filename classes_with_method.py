@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/17 16:50:20 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/18 12:43:19 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -90,14 +90,16 @@ class ProductCatalog:
 					product_list.append(product)
 		else:
 			product_list = self.products
-		print(product_list)
-		ret_dict = {}
-		count_product = 0
-		for product in product_list:
-			count_product += 1
-			ret_dict.update({product.id: product.get_product_detail()})
-		ret_dict["__count_product"] = count_product
-		return (ret_dict)
+		return(self.remove_dup_product(product_list))
+	
+	def	remove_dup_product(self, products):
+		new_products = []
+		for product in products:
+			if (not product.already_exist(new_products)):
+				new_products.append(product)
+		return (new_products)
+
+
 	
 	def view_product(self, product_id):
 		# this method need to implement all the same product but difference SPECIFY and each left stock
@@ -184,6 +186,17 @@ class	Product:
 	@property 
 	def	name(self):
 		return(self.__name)
+	
+	def already_exist_in(self, product_list):
+		for product in product_list:
+			if (self.is_same(product)):
+				return (1)
+		return (0)
+
+
+	def	is_same_name(self, product):
+		return (self.name == product.name)
+	
 
 	def	get_product_detail(self):
 		return ({
