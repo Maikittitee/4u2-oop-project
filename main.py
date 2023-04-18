@@ -4,11 +4,20 @@ from classes_with_method import shop
 from fastapi import FastAPI
 from typing import Optional
 from scene import *
+from fastapi.middleware.cors import CORSMiddleware
 
 
 
 
 app = FastAPI()
+
+app.add_middleware(
+	CORSMiddleware,
+	allow_origins=["*"],
+	allow_credentials=True,
+	allow_methods=["*"],
+	allow_headers=["*"]
+)
 
 @app.get("/")
 def	root():
@@ -46,12 +55,12 @@ def	make_purchase(username):
 		return ("OK")
 	return ("KO")
 
-@app.post("/Auth/login")
-def	login(username, password):
+@app.get("/Auth/login/{username}/{password}")
+def	login(username: str, password: str):
 	user = User(0)
 	if (user.login(username, password)):
-		return (username)
-	return ("KO")
+		return {"msg":username}
+	return {"msg":"KO"}
 
 @app.post("/Auth/register")
 def	register(username, email, password):
