@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/18 12:43:19 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/18 12:48:58 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -95,7 +95,7 @@ class ProductCatalog:
 	def	remove_dup_product(self, products):
 		new_products = []
 		for product in products:
-			if (not product.already_exist(new_products)):
+			if (not product.already_exist_in(new_products)):
 				new_products.append(product)
 		return (new_products)
 
@@ -189,7 +189,7 @@ class	Product:
 	
 	def already_exist_in(self, product_list):
 		for product in product_list:
-			if (self.is_same(product)):
+			if (self.is_same_name(product)):
 				return (1)
 		return (0)
 
