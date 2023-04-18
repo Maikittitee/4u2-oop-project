@@ -40,13 +40,29 @@ def	add_to_cart(username:str, product_id:str, quantity:int):
 		return ("OK")
 	return ("KO")
 
-@app.post("/User/{username}/cart/checkout")
+@app.post("/Users/{username}/cart/checkout")
 def	make_purchase(username):
 	if (shop.get_user_by_username(username).make_purchase()):
 		return ("OK")
 	return ("KO")
 
+@app.post("/Auth/login")
+def	login(username, password):
+	user = User(0)
+	if (user.login(username, password)):
+		return (username)
+	return ("KO")
 
+@app.post("/Auth/register")
+def	register(username, email, password):
+	guest = Guest()
+	if (guest.register(username, email, password)):
+		return ("OK")
+	return ("KO")
+
+@app.get("/Users/{username}")
+def	view_user(username:str):
+	return (shop.get_user_by_username(username).get_user_detail())
 
 
 # @app.post("/users/{username}/cart/checkout")
