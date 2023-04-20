@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/20 23:40:35 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/21 00:10:53 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -353,11 +353,14 @@ class AuthenticationUser(Customer):
 			ret_dict.update({order.order_id : order.get_order_detail()})
 		return (ret_dict)
 
+	def	add_to_favorite(self):
+		pass
+
 	def	get_user_favorite(self):
-		return ("Yang Mai dai Tum")
+		pass
 		
-	def make_purchase(self):
-		new_order = self.shopping_cart.checkout(self)
+	def make_purchase(self, address):
+		new_order = self.shopping_cart.checkout(self, address)
 		if (new_order): 
 			self.order.append(new_order)
 			self.shopping_cart.clear()
@@ -442,7 +445,7 @@ class	ShoppingCart:
 				total += item.product.price * (100 - item.promotion.discount)/100 * item.quantity
 		return (total)
 
-	def	checkout(self,user):
+	def	checkout(self,user ,address):
 		new_item_list = []
 		self.check_promotion()
 		for item in self.items:
@@ -450,7 +453,7 @@ class	ShoppingCart:
 				new_item_list.append(item)
 
 		if (len(new_item_list) != 0):	
-			new = Order(order_id_gen.generateID(), datetime.now(), user)
+			new = Order(order_id_gen.generateID(), datetime.now(), user, address)
 			for item in new_item_list:
 				item.product.stock -= item.quantity
 			new.items = new_item_list
@@ -459,12 +462,12 @@ class	ShoppingCart:
 			return (0)
 
 class	Order:
-	def __init__ (self, order_id, date_create, user):
+	def __init__ (self, order_id, date_create, user, address):
 		self.user = user
 		self.order_id = order_id
 		self.date_create = str(date_create)
 		self.items = [] # Agrettion Items
-		self.shipping_info = None # Agrettion ShippingInfo
+		self.shipping_info = ShippingInfo(address, ShippingStatus.NONSHIP, None, None) # Agrettion ShippingInfo
 		self.payment = Payment(payment_id_gen.generateID(), 0, OrderStatus.PENDING, self) # Asso Payment
 	
 	def get_order_detail(self):
@@ -489,18 +492,11 @@ class	Order:
 	def	make_payment(self, amount):
 		if (amount >= self.cal_total()):
 			self.payment.status = OrderStatus.CONFIRMED
-			self.shipping_info = ShippingInfo(self.user.address, ShippingStatus.NONSHIP, None, None)
+			self.shipping_info.date_shipping = datetime(datetime.year, datetime.month, datetime.day)
+			self.shipping_info.shipping_status = ShippingStatus.IN_SHIPPING
 			return (1)
 		return (0)
 
-	def	edit_shipping_info(self, address = None,  date_shipping = None, date_delivered = None):
-		if (address != None):
-			self.shipping_info.address = address
-		if (date_shipping != None):
-			self.date_shipping = date_shipping
-		if (date_delivered != None):
-			self.date_delivered = date_delivered
-		
 class	Payment:
 	def	__init__ (self, payment_id, amount, status, order):
 		self.order = order
@@ -515,6 +511,10 @@ class	ShippingInfo:
 		self.address = address
 		self.date_shipping = date_shipping
 		self.date_delivered = date_delivered
+	
+	def	set_delivered(self):
+		self.date_delivered = datetime(datetime.year, datetime.month, datetime.day)
+		self.shipping_status = ShippingStatus.DELIVERED 
 
 # ENUM #
 
