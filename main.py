@@ -43,35 +43,42 @@ def	view_cart(username : str):
 	# need to check searching name is a guy who search or not ... but how?
 	return (shop.get_user_by_username(username).shopping_cart.show_cart())
 
-@app.post("/Products/{product_id}/add_to_cart")
+@app.add("/Products/{product_id}/add_to_cart")
 def	add_to_cart(username:str, product_id:str, quantity:int):
-	if (shop.get_user_by_username(username).shopping_cart.add_to_cart(product_cat.get_inst_product_by_id(product_id), quantity)):
-		return ("OK")
+	ret = shop.get_user_by_username(username).shopping_cart.add_to_cart(product_cat.get_inst_product_by_id(product_id), quantity)
+	if (ret):
+		return (ret)
 	return ("KO")
 
 @app.post("/Users/{username}/cart/checkout")
-def	make_purchase(username):
+def	make_purchase(username:str):
 	if (shop.get_user_by_username(username).make_purchase()):
 		return ("OK")
 	return ("KO")
 
-@app.get("/Auth/login/{username}/{password}")
+@app.get("/Auth/login")
 def	login(username: str, password: str):
 	user = User(0)
 	if (user.login(username, password)):
-		return {"msg":username}
-	return {"msg":"KO"}
+		return (username)
+	return ("KO")
 
 @app.post("/Auth/register")
-def	register(username, email, password):
+def	register(username:str, email:str, password:str):
 	guest = Guest()
 	if (guest.register(username, email, password)):
+		return (username)
+	return ("KO")
+
+@app.post("Auth/logout")
+def	logout(username : str):
+	if (shop.get_user_by_username(username).logout()):
 		return ("OK")
 	return ("KO")
 
 @app.get("/Users/{username}")
 def	view_user(username:str):
-	return (shop.get_user_by_username(username).get_user_detail())
+	return (shop.get_user_by_username(username))
 
 
 # @app.post("/users/{username}/cart/checkout")

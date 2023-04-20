@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/18 12:48:58 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/20 23:40:35 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -391,8 +391,9 @@ class	ShoppingCart:
 	def	add_to_cart(self, product, quantity):
 		if (product.stock < quantity):
 			return (0)
-		self.items.append(Item(product, quantity, self.get_promotion(product)))
-		return (1)
+		item = Item(product, quantity, self.get_promotion(product)) 
+		self.items.append(item)
+		return (item.get_item_detail())
 	
 	def get_item_by_index(self, index):
 		count = 0
