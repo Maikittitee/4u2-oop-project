@@ -51,8 +51,11 @@ def	add_to_cart(username:str, product_id:str, quantity:int):
 	return ("KO")
 
 @app.post("/Users/{username}/cart/checkout")
-def	make_purchase(username:str):
-	if (shop.get_user_by_username(username).make_purchase()):
+def	make_purchase(username:str, address:str = None):
+	user = shop.get_user_by_username(username)
+	if (address == None):
+		address = user.address
+	if (user.make_purchase(address)):
 		return ("OK")
 	return ("KO")
 
