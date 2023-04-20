@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/21 00:10:53 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/21 00:25:46 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -498,9 +498,12 @@ class	Order:
 		return (0)
 
 class	Payment:
-	def	__init__ (self, payment_id, amount, status, order):
+	def	__init__ (self, payment_id, amount, status, order, name, email, tel):
 		self.order = order
 		self.payment_id = payment_id
+		self.name = name
+		self.email = email
+		self.tel = tel
 		self.amount = amount
 		self.status = status
 		self.evidence = None
