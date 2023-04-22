@@ -33,14 +33,14 @@ def	products(name:Optional[str] = None, in_type:Optional[str] = None):
 def	view_product(product_id : str):
 	return (product_cat.view_product(product_id))
 
-@app.get("/Users/{username}")
-def	view_user(username : str):
-	# need to check searching name is a guy who search or not ... but how?
-	return (shop.get_user_by_username(username).get_user_detail())
+@app.post("/Users/{username}")
+def	view_user_detail(username : str):
+	# need to check searching name is a guy who search or not ... but how? -> Ohm said it's FRONTEND problem so yeah im not gonna do it.
+	return (shop.get_user_by_username(username))
 
 @app.get("/Users/{username}/cart")
 def	view_cart(username : str):
-	# need to check searching name is a guy who search or not ... but how?
+	# need to check searching name is a guy who search or not ... but how? -> im won't do this one neither.
 	return (shop.get_user_by_username(username).shopping_cart.show_cart())
 
 @app.add("/Products/{product_id}/add_to_cart")
@@ -79,9 +79,11 @@ def	logout(username : str):
 		return ("OK")
 	return ("KO")
 
-@app.get("/Users/{username}")
-def	view_user(username:str):
-	return (shop.get_user_by_username(username))
+@app.post("/Users/{username}/confirm_payment")
+def	confirm_payment(order_id, username, amount):
+	shop.get_user_by_username(username).get_order_by_id(order_id).confirm_payment(amount)
+	# change order status to confirm
+	# shipping status to In_shipping
 
 
 # @app.post("/users/{username}/cart/checkout")

@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/23 01:05:49 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/23 01:49:45 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -146,6 +146,7 @@ class Shop:
 	def __init__(self):
 		self.product_catalog = product_cat #AGRET ProductCatalog
 		self.users = [] #AGGRESION User --> # KEEP ONLY AUTHENTICATIONUSER !!!
+		self.admins = []
 		self.promotions = [] # AGGRESTION Promotion\
 
 	def	add_promotion(self, product_ids, date_start, date_end, discount):
@@ -352,14 +353,18 @@ class AuthenticationUser(Customer):
 		for order in self.order:
 			ret_dict.update({order.order_id : order.get_order_detail()})
 		return (ret_dict)
+	
+	def	get_order_by_id(self, order_id):
+		for order in self.orders:
+			if (order.order_id == order_id):
+				return (order)
+		return (None)
+
 
 	def	add_to_favorite(self, product_id):
 		self.favorite.append(product_cat.get_inst_product_by_id(product_id))
 
 	
-	def	get_user_favorite(self):
-		pass
-		
 	def make_purchase(self, address):
 		new_order = self.shopping_cart.checkout(self, address)
 		if (new_order): 
@@ -368,9 +373,6 @@ class AuthenticationUser(Customer):
 			return (1)
 		return (0)
 	
-	def	make_payment(self, order_id, evi):
-		order = self.get_order_by_id(order_id)
-
 
 
 #########################################################
@@ -490,7 +492,7 @@ class	Order:
 			total += item.product.price * (100 - item.promotion.discount)/100 * item.quantity
 		return (total)
 
-	def	make_payment(self, amount):
+	def	confirm_payment(self, amount):
 		if (amount >= self.cal_total()):
 			self.payment.status = OrderStatus.CONFIRMED
 			self.shipping_info.date_shipping = datetime(datetime.year, datetime.month, datetime.day)
