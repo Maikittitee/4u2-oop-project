@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/21 00:25:46 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/23 01:05:49 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -353,9 +353,10 @@ class AuthenticationUser(Customer):
 			ret_dict.update({order.order_id : order.get_order_detail()})
 		return (ret_dict)
 
-	def	add_to_favorite(self):
-		pass
+	def	add_to_favorite(self, product_id):
+		self.favorite.append(product_cat.get_inst_product_by_id(product_id))
 
+	
 	def	get_user_favorite(self):
 		pass
 		
