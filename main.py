@@ -79,25 +79,21 @@ def	logout(username : str):
 		return ("OK")
 	return ("KO")
 
+@app.post("/Users/{username}/orders")
+def	get_orders(username):
+	return (shop.get_user_by_username(username).order)
+
 @app.post("/Users/{username}/confirm_payment")
 def	confirm_payment(order_id, username, amount):
-	shop.get_user_by_username(username).get_order_by_id(order_id).confirm_payment(amount)
-	# change order status to confirm
-	# shipping status to In_shipping
+	order = shop.get_user_by_username(username).get_order_by_id(order_id)
+	if (not order):
+		return ("KO")
+	if (order.confirm_payment(amount)):
+		return ("OK")
+	return ("KO")
 
-
-# @app.post("/users/{username}/cart/checkout")
-# def make_purchase():	
-# 	od = cart.new_order(order_id_gen,current_time,"thisIsAName")
-# 	return (od.get_order_detail())
-
-
-
-# od = cart.new_order(order_id_gen.generateID(),current_time,"thisIsAName")
-# print(od.get_order_detail())
-
-# for item in od.items:
-# 	print(item.product.name)
-
-# print()
-# print(product_cat.browse_product(None,"Lips"))
+@app.post("/feat/orders")
+def	view_order(email, order_id):
+	if (shop.get_user_by_email(email).get_order_by_id(order_id)):
+		return ("OK")
+	return ("KO")

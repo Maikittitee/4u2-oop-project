@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/23 01:49:45 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/23 02:02:42 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -166,6 +166,13 @@ class Shop:
 			if (user.name == username):
 				return (user)
 		return (None)
+	
+	def	get_user_by_email(self, email):
+		for user in self.users:
+			if (user.address.email == email):
+				return (user)
+		return (None)
+	
 	
 shop = Shop()
 
@@ -329,9 +336,6 @@ class AuthenticationUser(Customer):
 			if (order.order_id == order_id):
 				return (order)
 		return (None)
-
-	def set_address(self, new_addr):
-		self.address = new_addr
 
 	def	get_user_detail(self):
 		return (
