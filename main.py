@@ -97,3 +97,8 @@ def	view_order(email, order_id):
 	if (shop.get_user_by_email(email).get_order_by_id(order_id)):
 		return ("OK")
 	return ("KO")
+
+@app.post("/users/{username}/edit")
+def	change_info():
+	pass
+
