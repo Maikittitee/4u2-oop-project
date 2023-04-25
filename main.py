@@ -75,7 +75,7 @@ def	register(username:str, email:str, password:str):
 		return (new.name)
 	return ("KO")
 
-@app.post("Auth/logout")
+@app.post("/Auth/logout")
 def	logout(username : str):
 	if (shop.get_user_by_username(username).logout()):
 		return ("OK")

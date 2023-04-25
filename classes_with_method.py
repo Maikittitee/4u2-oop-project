@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/26 01:41:30 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/26 01:58:18 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -309,6 +309,7 @@ class User: #ABTRACT CLASS ...... STOPPPP DONT ASK ME ANYTHING > EVERY CLASS CAN
 
 	def	logout(self):
 		self.status = UserStatus.OFFLINE
+		return (1)
 
 class Admin(User):
 	count = 0
