@@ -7,8 +7,6 @@ from scene import *
 from fastapi.middleware.cors import CORSMiddleware
 
 
-
-
 app = FastAPI()
 
 app.add_middleware(
@@ -98,7 +96,36 @@ def	view_order(email, order_id):
 		return ("OK")
 	return ("KO")
 
-@app.post("/users/{username}/edit")
-def	change_info():
-	pass
+@app.post("/users/{username}/editinfo")
+def	change_info(username, new_name, new_tel):
+	user = shop.get_user_by_username(username)
+	user.name = new_name
+	user.tel = new_tel
+
+@app.post("/users/{username}/del_address")
+def	add_address(name, address, tel, username, type = 0):
+	user = shop.get_user_by_username(username)
+	if (type == 1):
+		addr = ShippingAddress(name, address, tel)
+	elif (type == 2):
+		addr = TaxInvoiceAddress(name, address, tel)
+	else:
+		return ("KO")
+	user.address.append(addr)
+	return ("OK")
+
+@app.delete("/users/{username}/del_address")
+def	del_address(address_index, username):
+	user = shop.get_user_by_username(username)
+	user.address.pop(address_index)
+	return ("OK")
+
+@app.post("/users/{username}/change_password")
+def	change_pass(new_pass, username):
+	user = shop.get_user_by_username(username)
+	user.account.password = new_pass
+	return ("OK")
+
+	
+
 

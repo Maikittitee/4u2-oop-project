@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/23 02:02:42 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/26 00:35:40 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -265,6 +265,26 @@ class Account:
 		self.email = email
 		self.password = password
 
+class Address:
+	def	__init__ (self, name, address, tel):
+		self.name = name
+		self.address = address
+		self.tel = tel
+
+class	ShippingAddress(Address):
+	def __init__(self, name, address, tel):
+		Address.__init__(self, name, address, tel)
+		self.type = AddressType.SHIPPING
+
+class	TaxInvoiceAddress(Address):
+	def __init__(self, name, address, tel):
+		Address.__init__(self, name, address, tel)
+		self.type = AddressType.TAXINVOICE
+
+class	AddressType(Enum):
+	SHIPPING = 0
+	TAXINVOICE = 1
+
 class	UserStatus(Enum):
 	ONLINE = 1
 	OFFLINE = 0
@@ -326,10 +346,17 @@ class AuthenticationUser(Customer):
 	def	__init__ (self, username, email, password):
 		Customer.__init__(self)
 		self.name = username
-		self.address = None
+		self.address = []
 		self.account = Account(email, password)
 		self.order = [] # Aggretion Order
 		self.favorite = []
+		self.tel = None
+
+	def	add_address(self, name, address, tel, type):
+		if (type == AddressType.SHIPPING):
+			self.address.append(ShippingAddress(name, tel, type))
+		elif (type == AddressType.TAXINVOICE):
+			self.address.append(TaxInvoiceAddress(name, tel, type))
 
 	def	get_order_by_id(self, order_id):
 		for order in self.order:
