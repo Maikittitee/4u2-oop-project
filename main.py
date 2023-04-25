@@ -31,17 +31,21 @@ def	products(name:Optional[str] = None, in_type:Optional[str] = None):
 def	view_product(product_id : str):
 	return (product_cat.view_product(product_id))
 
-@app.post("/Users/{username}")
+@app.get("/Users/{username}")
 def	view_user_detail(username : str):
 	# need to check searching name is a guy who search or not ... but how? -> Ohm said it's FRONTEND problem so yeah im not gonna do it.
-	return (shop.get_user_by_username(username))
+	print(shop.users)
+	if (shop.get_user_by_username(username)):
+		return (shop.get_user_by_username(username).get_user_detail())
+	return ("KO")
+	# return ("H)
 
 @app.get("/Users/{username}/cart")
 def	view_cart(username : str):
 	# need to check searching name is a guy who search or not ... but how? -> im won't do this one neither.
 	return (shop.get_user_by_username(username).shopping_cart.show_cart())
 
-@app.add("/Products/{product_id}/add_to_cart")
+@app.get("/Products/{product_id}/add_to_cart")
 def	add_to_cart(username:str, product_id:str, quantity:int):
 	ret = shop.get_user_by_username(username).shopping_cart.add_to_cart(product_cat.get_inst_product_by_id(product_id), quantity)
 	if (ret):
@@ -49,11 +53,9 @@ def	add_to_cart(username:str, product_id:str, quantity:int):
 	return ("KO")
 
 @app.post("/Users/{username}/cart/checkout")
-def	make_purchase(username:str, address:str = None):
+def	make_purchase(username:str, address_index:int):
 	user = shop.get_user_by_username(username)
-	if (address == None):
-		address = user.address
-	if (user.make_purchase(address)):
+	if (user.make_purchase(user.address[address_index])):
 		return ("OK")
 	return ("KO")
 
@@ -67,8 +69,10 @@ def	login(username: str, password: str):
 @app.post("/Auth/register")
 def	register(username:str, email:str, password:str):
 	guest = Guest()
-	if (guest.register(username, email, password)):
-		return (username)
+	new = guest.register(username, email, password) 
+	if (new):
+		shop.users.append(new)
+		return (new.name)
 	return ("KO")
 
 @app.post("Auth/logout")
@@ -79,10 +83,11 @@ def	logout(username : str):
 
 @app.post("/Users/{username}/orders")
 def	get_orders(username):
-	return (shop.get_user_by_username(username).order)
+	print(shop.get_user_by_username(username).order)
+	return (shop.get_user_by_username(username).get_user_order())
 
 @app.post("/Users/{username}/confirm_payment")
-def	confirm_payment(order_id, username, amount):
+def	confirm_payment(order_id, username, amount:int):
 	order = shop.get_user_by_username(username).get_order_by_id(order_id)
 	if (not order):
 		return ("KO")
@@ -92,8 +97,9 @@ def	confirm_payment(order_id, username, amount):
 
 @app.post("/feat/orders")
 def	view_order(email, order_id):
-	if (shop.get_user_by_email(email).get_order_by_id(order_id)):
-		return ("OK")
+	ret = shop.get_user_by_email(email).get_order_by_id(order_id).get_order_detail()
+	if (ret):
+		return (ret)
 	return ("KO")
 
 @app.post("/users/{username}/editinfo")
@@ -102,8 +108,8 @@ def	change_info(username, new_name, new_tel):
 	user.name = new_name
 	user.tel = new_tel
 
-@app.post("/users/{username}/del_address")
-def	add_address(name, address, tel, username, type = 0):
+@app.post("/users/{username}/add_address")
+def	add_address(name, address, tel, username, type:int = 0):
 	user = shop.get_user_by_username(username)
 	if (type == 1):
 		addr = ShippingAddress(name, address, tel)
@@ -115,7 +121,7 @@ def	add_address(name, address, tel, username, type = 0):
 	return ("OK")
 
 @app.delete("/users/{username}/del_address")
-def	del_address(address_index, username):
+def	del_address(address_index:int, username):
 	user = shop.get_user_by_username(username)
 	user.address.pop(address_index)
 	return ("OK")

@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/26 00:35:40 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/26 01:41:30 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -163,13 +163,14 @@ class Shop:
 
 	def get_user_by_username(self, username):
 		for user in self.users:
+			print(user.name)
 			if (user.name == username):
 				return (user)
 		return (None)
 	
 	def	get_user_by_email(self, email):
 		for user in self.users:
-			if (user.address.email == email):
+			if (user.account.email == email):
 				return (user)
 		return (None)
 	
@@ -282,8 +283,8 @@ class	TaxInvoiceAddress(Address):
 		self.type = AddressType.TAXINVOICE
 
 class	AddressType(Enum):
-	SHIPPING = 0
-	TAXINVOICE = 1
+	SHIPPING = 1
+	TAXINVOICE = 2
 
 class	UserStatus(Enum):
 	ONLINE = 1
@@ -374,9 +375,10 @@ class AuthenticationUser(Customer):
 				"email":self.account.email,
 				"password":self.account.password
 			},
+			"user_address":self.address,
 			"user_shopping_cart":self.shopping_cart.show_cart(),
 			"user_order":self.get_user_order(),
-			"user_favorite":self.get_user_favorite()
+			"user_favorite":self.favorite
 		}
 		)
 	def	get_user_order(self):
@@ -386,7 +388,7 @@ class AuthenticationUser(Customer):
 		return (ret_dict)
 	
 	def	get_order_by_id(self, order_id):
-		for order in self.orders:
+		for order in self.order:
 			if (order.order_id == order_id):
 				return (order)
 		return (None)
@@ -502,7 +504,7 @@ class	Order:
 		self.date_create = str(date_create)
 		self.items = [] # Agrettion Items
 		self.shipping_info = ShippingInfo(address, ShippingStatus.NONSHIP, None, None) # Agrettion ShippingInfo
-		self.payment = Payment(payment_id_gen.generateID(), 0, OrderStatus.PENDING, self) # Asso Payment
+		self.payment = Payment(payment_id_gen.generateID(), 0, OrderStatus.PENDING, self, user.name, user.account.email, user.tel) # Asso Payment
 	
 	def get_order_detail(self):
 		item_dict = {}
@@ -526,7 +528,7 @@ class	Order:
 	def	confirm_payment(self, amount):
 		if (amount >= self.cal_total()):
 			self.payment.status = OrderStatus.CONFIRMED
-			self.shipping_info.date_shipping = datetime(datetime.year, datetime.month, datetime.day)
+			self.shipping_info.date_shipping = datetime(datetime.now().year, datetime.now().month, datetime.now().day)
 			self.shipping_info.shipping_status = ShippingStatus.IN_SHIPPING
 			return (1)
 		return (0)
