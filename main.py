@@ -170,8 +170,8 @@ async def	del_product(product_id:str):
 	return ("OK")
 
 @app.post("/admin/orders")
-async def	browse_orders(sort:int = 0): #sort by time new first
-	return (shop.browse_orders(sort))
+async def	browse_orders(): #sort by time new first
+	return (shop.browse_orders())
 
 @app.post("/admin/promotions")
 async def	browse_promotions():
