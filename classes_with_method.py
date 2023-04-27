@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/27 17:27:09 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/27 22:43:39 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -150,11 +150,17 @@ class Shop:
 		self.admins = []
 		self.promotions = [] # AGGRESTION Promotion\
 
-	def	add_promotion(self, product_ids, date_start, date_end, discount):
+	def	add_promotion(self, product_ids:str, date_start, date_end, discount):
+		product_id_list = product_ids.split(",")
 		products = []
-		for product_id in product_ids:
+		for product_id in product_id_list:
 			products.append(self.product_catalog.get_inst_product_by_id(product_id))
+		for exist_promotion in self.promotions:
+			for select_product in products:
+				if (select_product in exist_promotion.products):
+					return (0)
 		self.promotions.append(Promotion(products, date_start, date_end, discount))
+		return (1)
 
 	def	browse_order(self):
 		ret_dict = {}
@@ -474,8 +480,19 @@ class	ShoppingCart:
 	def	check_promotion(self):
 		for item in self.items:
 			if (item.promotion != None and not item.promotion.is_promotion_available()):
-				item.promotion = None
-			
+				item.promotion = Promotion(item.product, None, None, 0)
+
+	def	update_cart(self):
+		old_items = self.items
+		new_items = []
+		for item in old_items:
+			if (item.promotion.discount == 0):
+				new_items.append(Item(item.product, item.quantity, self.get_promotion(item.product)))
+			else:
+				new_items.append(item)
+		self.items = new_items
+
+
 	def	show_cart(self):
 		total = 0
 		ret_dict = {
@@ -483,6 +500,7 @@ class	ShoppingCart:
 			"unavailable_item": {}	
 		}
 		self.check_promotion()
+		self.update_cart()
 		for item in self.items:
 			if (item.is_available()):
 				ret_dict["available_item"].update(item.get_item_detail())
