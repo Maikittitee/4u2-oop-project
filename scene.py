@@ -2,14 +2,14 @@ from classes_with_method import *
 from datetime import datetime
 import json
 
-product_cat.add_product("Jelly Tint", 259, "#02", 11, "Magic Lib Tint", "This is detail\nThis lib made by angle that came from heaven\nHave been sell For 10 year",["Lips"])
-product_cat.add_product("Jelly Tint", 259, "#01", 22, "Magic Lib Tint", "This is detail\nThis lib made by angle that came from heaven\nHave been sell For 10 year",["Lips"])
-product_cat.add_product("Jelly Tint", 259, "#07", 9, "Magic Lib Tint", "This is detail\nThis lib made by angle that came from heaven\nHave been sell For 10 year",["Lips"])
-product_cat.add_product("EST. HARDDER 2", 229, "#31", 1, "nothing here", "This is another detaikl", ["Lips"])
-product_cat.add_product("Keychorn Q1", 6790, "Blue", 12, "First Keychron custom keyboard","This is magic thing, just buy it and typing 300wpm",["keyboard","gadget"])
+product_cat.add_product("Jelly Tint", 259, "#02", 11, "Magic Lib Tint", "This is detail\nThis lib made by angle that came from heaven\nHave been sell For 10 year","Lips")
+product_cat.add_product("Jelly Tint", 259, "#01", 22, "Magic Lib Tint", "This is detail\nThis lib made by angle that came from heaven\nHave been sell For 10 year","Lips")
+product_cat.add_product("Jelly Tint", 259, "#07", 9, "Magic Lib Tint", "This is detail\nThis lib made by angle that came from heaven\nHave been sell For 10 year","Lips")
+product_cat.add_product("EST. HARDDER 2", 229, "#31", 1, "nothing here", "This is another detaikl", "Lips")
+product_cat.add_product("Keychorn Q1", 6790, "Blue", 12, "First Keychron custom keyboard","This is magic thing, just buy it and typing 300wpm","keyboard,gadget")
 
-admin1 = Admin("Krittithee Tuncharoen",10000,shop,"admin1","admin1@gmail.com","pass1")
-# admin2 = Admin("Jirapat Treesuwan",10000,shop,"admin2","admin2@gmail.com","pass2")
+admin1 = Admin("Krittithee Tuncharoen",10000,"admin1","admin1@gmail.com","pass1")
+# admin2 = Admin("Jirapat Treesuwan",10000,"admin2","admin2@gmail.com","pass2")
 
 guest = Guest()
 customer = guest.register("user","maikittitee@gmail.com","pass")

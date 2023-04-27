@@ -134,5 +134,23 @@ def	change_pass(new_pass, username):
 
 # ADMIN SIDE API 
 
+@app.post("/admin/login")
+def	admin_login(username:str, password:str):
+	user = User(0)
+	if (user.login(username, password, 1)):
+		return (username)
+	return ("KO")
+
+@app.post("/admin/add_new_admin")
+def	add_new_admin(name, salary:int, username, email, password):
+	new_admin = Admin(name, salary, username, email, password)
+	if (new_admin.register(username, email)):
+		return (username)
+	return ("KO")
+
+@app.post("/admin/add_product")
+def	add_product(name, price:int, specify, stock:int, description, detail, p_type:str):
+	product_cat.add_product(name, price, specify, stock, description, detail, p_type)
+	return ("OK")
 
 

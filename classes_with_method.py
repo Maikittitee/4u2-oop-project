@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/27 16:48:17 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/27 17:27:09 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,8 +53,9 @@ class ProductCatalog:
 		self.products = []
 
 
-	def	add_product(self, name, price, specify, stock, description, detail, p_type):
-		self.products.append(Product(name,price, description, detail, p_type, stock, specify))
+	def	add_product(self, name, price, specify, stock, description, detail, p_type:str):
+		p_list = p_type.split(",")
+		self.products.append(Product(name,price, description, detail, p_list, stock, specify))
 	
 	def	delete_product(self, product_id):
 		product = self.get_inst_product_by_id(product_id)
@@ -317,22 +318,24 @@ class User: #ABTRACT CLASS ...... STOPPPP DONT ASK ME ANYTHING > EVERY CLASS CAN
 
 class Admin(User):
 	count = 0
-	def __init__ (self, name,salary, shop:Shop, username, email, password):
+	def __init__ (self, name,salary, username, email, password):
 		User.__init__(self,f"admin{admin_id_gen.generateID()}")
 		self.account = Account(email, password) 
 		self.salary = salary
 		self.name = username
-		shop.admins.append(self)
+		self.real_name = name
 
-	def	login(self,username, password):
+	def	register(self, username, email):
 		for admin in self.shop.admins:
-			if (username == admin.username):
-				if (password == admin.account.password):
-					admin.status = UserStatus.ONLINE
-					return (1)
-				else:
-					return (0)
-		return (0)
+			if (username == admin.name):
+				return (0)
+			if (email == admin.email):
+				return (0)
+		self.shop.admins.append(self)
+		return (1)
+		
+
+		
 
 class Customer(User):
 	def __init__ (self):
