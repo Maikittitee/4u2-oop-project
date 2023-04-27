@@ -132,6 +132,7 @@ def	change_pass(new_pass, username):
 	user.account.password = new_pass
 	return ("OK")
 
-	
+# ADMIN SIDE API 
+
 
 

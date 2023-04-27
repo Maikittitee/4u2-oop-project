@@ -8,7 +8,9 @@ product_cat.add_product("Jelly Tint", 259, "#07", 9, "Magic Lib Tint", "This is 
 product_cat.add_product("EST. HARDDER 2", 229, "#31", 1, "nothing here", "This is another detaikl", ["Lips"])
 product_cat.add_product("Keychorn Q1", 6790, "Blue", 12, "First Keychron custom keyboard","This is magic thing, just buy it and typing 300wpm",["keyboard","gadget"])
 
-admin = Admin("I'm Admin",10000,shop,"admin1","admin@gmail.com","pass")
+admin1 = Admin("Krittithee Tuncharoen",10000,shop,"admin1","admin1@gmail.com","pass1")
+# admin2 = Admin("Jirapat Treesuwan",10000,shop,"admin2","admin2@gmail.com","pass2")
+
 guest = Guest()
 customer = guest.register("user","maikittitee@gmail.com","pass")
 if (customer.login("user","pass")):
@@ -18,3 +20,5 @@ shop.add_promotion(["1","3"], datetime(2004,4,9), datetime(2025,4,9), 50)
 
 customer.shopping_cart.add_to_cart(product_cat.get_inst_product_by_id("1"), 2)
 customer.shopping_cart.add_to_cart(product_cat.get_inst_product_by_id("2"), 1)
+
+print(shop.admins)

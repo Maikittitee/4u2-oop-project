@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/26 01:58:18 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/27 16:48:17 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -297,8 +297,12 @@ class User: #ABTRACT CLASS ...... STOPPPP DONT ASK ME ANYTHING > EVERY CLASS CAN
 		self.shop = shop
 		self.status = UserStatus.OFFLINE
 
-	def	login(self,username, password):
-		for user in self.shop.users:
+	def	login(self,username, password, type = 0):
+		if (type == 0):
+			src = self.shop.users
+		else:
+			src = self.shop.admins
+		for user in src:
 			if (username == user.name):
 				if (password == user.account.password):
 					user.status = UserStatus.ONLINE
@@ -313,11 +317,22 @@ class User: #ABTRACT CLASS ...... STOPPPP DONT ASK ME ANYTHING > EVERY CLASS CAN
 
 class Admin(User):
 	count = 0
-	def __init__ (self, name,salary, shop, username, email, password):
+	def __init__ (self, name,salary, shop:Shop, username, email, password):
 		User.__init__(self,f"admin{admin_id_gen.generateID()}")
 		self.account = Account(email, password) 
 		self.salary = salary
 		self.name = username
+		shop.admins.append(self)
+
+	def	login(self,username, password):
+		for admin in self.shop.admins:
+			if (username == admin.username):
+				if (password == admin.account.password):
+					admin.status = UserStatus.ONLINE
+					return (1)
+				else:
+					return (0)
+		return (0)
 
 class Customer(User):
 	def __init__ (self):
