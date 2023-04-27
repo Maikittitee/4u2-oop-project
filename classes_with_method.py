@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/27 22:43:39 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/28 01:52:03 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -149,6 +149,7 @@ class Shop:
 		self.users = [] #AGGRESION User --> # KEEP ONLY AUTHENTICATIONUSER !!!
 		self.admins = []
 		self.promotions = [] # AGGRESTION Promotion\
+		self.orders = []
 
 	def	add_promotion(self, product_ids:str, date_start, date_end, discount):
 		product_id_list = product_ids.split(",")
@@ -162,11 +163,12 @@ class Shop:
 		self.promotions.append(Promotion(products, date_start, date_end, discount))
 		return (1)
 
-	def	browse_order(self):
+	def	browse_orders(self, sort = 0):
 		ret_dict = {}
 		for user in self.users:
-			for order in user.orders:
+			for order in user.order:
 				ret_dict.update({user.name : order.get_order_detail()})
+		return (ret_dict)
 
 	def get_user_by_username(self, username):
 		for user in self.users:
@@ -250,8 +252,11 @@ class	Item:
 		}
 		return (ret_dict)
 
+promotion_id_gen = ID()
+
 class	Promotion:
 	def	__init__ (self, product_list:list,date_start, date_end, discount):
+		self.id = promotion_id_gen.generateID()
 		self.date_start = date_start
 		self.date_end = date_end
 		self.discount = discount
@@ -427,6 +432,7 @@ class AuthenticationUser(Customer):
 		new_order = self.shopping_cart.checkout(self, address)
 		if (new_order): 
 			self.order.append(new_order)
+			shop.orders.append(new_order)
 			self.shopping_cart.clear()
 			return (1)
 		return (0)

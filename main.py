@@ -113,9 +113,9 @@ async def	change_info(username, new_name, new_tel):
 @app.post("/users/{username}/add_address")
 async def	add_address(name, address, tel, username, type:int = 0):
 	user = shop.get_user_by_username(username)
-	if (type == 1):
+	if (type == 0):
 		addr = ShippingAddress(name, address, tel)
-	elif (type == 2):
+	elif (type == 1):
 		addr = TaxInvoiceAddress(name, address, tel)
 	else:
 		return ("KO")
@@ -168,4 +168,21 @@ async def	del_product(product_id:str):
 		return ("KO")
 	product_cat.products.remove(target_product)
 	return ("OK")
+
+@app.post("/admin/orders")
+async def	browse_orders(sort:int = 0): #sort by time new first
+	return (shop.browse_orders(sort))
+
+@app.post("/admin/promotions")
+async def	browse_promotions():
+	return (shop.promotions)
+
+@app.post("/admin/users")
+async def	browse_users():
+	return (shop.users)
+
+@app.post("/admin/admins")
+async def	browse_admins():
+	return (shop.admins)
+
 
