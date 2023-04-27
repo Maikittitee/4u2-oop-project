@@ -141,7 +141,7 @@ def	admin_login(username:str, password:str):
 		return (username)
 	return ("KO")
 
-@app.post("/admin/add_new_admin")
+@app.post("/admin/register")
 def	add_new_admin(name, salary:int, username, email, password):
 	new_admin = Admin(name, salary, username, email, password)
 	if (new_admin.register(username, email)):
@@ -151,6 +151,14 @@ def	add_new_admin(name, salary:int, username, email, password):
 @app.post("/admin/add_product")
 def	add_product(name, price:int, specify, stock:int, description, detail, p_type:str):
 	product_cat.add_product(name, price, specify, stock, description, detail, p_type)
+	return ("OK")
+
+@app.delete("/admin/del_product/{product_id}")
+def	del_product(product_id:str):
+	target_product = product_cat.get_inst_product_by_id(product_id)
+	if (target_product == None):
+		return ("KO")
+	product_cat.products.remove(target_product)
 	return ("OK")
 
 
