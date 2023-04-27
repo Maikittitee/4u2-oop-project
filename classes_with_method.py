@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/28 01:52:03 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/28 02:23:02 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -163,7 +163,7 @@ class Shop:
 		self.promotions.append(Promotion(products, date_start, date_end, discount))
 		return (1)
 
-	def	browse_orders(self, sort = 0):
+	def	browse_orders(self):
 		ret_dict = {}
 		for user in self.users:
 			for order in user.order:
