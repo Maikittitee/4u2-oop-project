@@ -16,7 +16,7 @@ customer = guest.register("user","maikittitee@gmail.com","pass")
 if (customer.login("user","pass")):
 	print("login Sucess")
 
-shop.add_promotion(["1","3"], datetime(2004,4,9), datetime(2025,4,9), 50)
+shop.add_promotion("1,3", datetime(2004,4,9), datetime(2025,4,9), 50)
 
 customer.shopping_cart.add_to_cart(product_cat.get_inst_product_by_id("1"), 2)
 customer.shopping_cart.add_to_cart(product_cat.get_inst_product_by_id("2"), 1)
