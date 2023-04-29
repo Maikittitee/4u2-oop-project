@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Orders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            background-color: #ffb3a6;
+            padding: 20px;
+            margin: 0;
+            color: #fff;
+            text-align: center;
+        }
+
+        table {
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+            margin: 20px auto;
+            width: 80%;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #ffb3a6;
+            color: #fff;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #f2f2f2;
+        }
+
+        tbody tr:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Browse Orders</h1>
+    <table id="orders-table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Order Details</th>
+            </tr>
+        </thead>
+        <tbody id="orders-table-body">
+        </tbody>
+    </table>
+
+    <script>
+        async function fetchOrders() {
+            const response = await fetch('http://127.0.0.1:8000/admin/orders');
+            const data = await response.json();
+            return data;
+        }
+
+        function displayOrders(orders) {
+            const tableBody = document.getElementById('orders-table-body');
+            for (const [username, order] of Object.entries(orders)) {
+                const row = document.createElement('tr');
+                const usernameCell = document.createElement('td');
+                const orderDetailsCell = document.createElement('td');
+
+                usernameCell.textContent = username;
+                orderDetailsCell.innerHTML = `
+                    <strong>ID:</strong> ${order.id}<br>
+                    <strong>Payment Status:</strong> ${order.payment_status}
+                `;
+
+                row.appendChild(usernameCell);
+                row.appendChild(orderDetailsCell);
+                tableBody.appendChild(row);
+            }
+        }
+
+        async function init() {
+            const orders = await fetchOrders();
+            displayOrders(orders);
+        }
+
+        init();
+    </script>
+</body>
+</html>

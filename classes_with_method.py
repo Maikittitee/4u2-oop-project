@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/28 02:23:02 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/04/30 05:07:22 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -79,7 +79,7 @@ class ProductCatalog:
 				products.append(product)
 		return (products)
 
-	def	browse_product (self, name : Optional[str] = None, type_input : Optional[str] = None) -> None:
+	def	browse_product (self, name : Optional[str] = None, type_input : Optional[str] = None, all = False) -> None:
 		product_list = []
 		if (type_input != None):
 			for product in self.products:
@@ -91,6 +91,8 @@ class ProductCatalog:
 					product_list.append(product)
 		else:
 			product_list = self.products
+		if (all):
+			return (product_list)
 		return(self.remove_dup_product(product_list))
 	
 	def	remove_dup_product(self, products):
@@ -309,7 +311,8 @@ class User: #ABTRACT CLASS ...... STOPPPP DONT ASK ME ANYTHING > EVERY CLASS CAN
 		self.shop = shop
 		self.status = UserStatus.OFFLINE
 
-	def	login(self,username, password, type = 0):
+	def	login(self,username, password, type:Optional[int] = 0):
+		print(f"type: {type}")
 		if (type == 0):
 			src = self.shop.users
 		else:
@@ -320,7 +323,9 @@ class User: #ABTRACT CLASS ...... STOPPPP DONT ASK ME ANYTHING > EVERY CLASS CAN
 					user.status = UserStatus.ONLINE
 					return (1)
 				else:
+					print("password not correct")
 					return (0)
+		print("Wrong")
 		return (0)
 
 	def	logout(self):

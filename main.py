@@ -136,11 +136,15 @@ async def	change_pass(new_pass, username):
 
 # ADMIN SIDE API 
 
+
+
 @app.post("/admin/login")
-async def	admin_login(username:str, password:str):
+async def	admin_login(data:dict):
+	print(data["username"])
+	print(data["password"])
 	user = User(0)
-	if (user.login(username, password, 1)):
-		return (username)
+	if (user.login(data["username"], data["password"], 1)):
+		return (data["username"])
 	return ("KO")
 
 @app.post("/admin/register")
@@ -169,20 +173,23 @@ async def	del_product(product_id:str):
 	product_cat.products.remove(target_product)
 	return ("OK")
 
-@app.post("/admin/orders")
+@app.get("/admin/orders")
 async def	browse_orders():
 	return (shop.browse_orders())
 
-@app.post("/admin/promotions")
+@app.get("/admin/promotions")
 async def	browse_promotions():
 	return (shop.promotions)
 
-@app.post("/admin/users")
+@app.get("/admin/users")
 async def	browse_users():
 	return (shop.users)
 
-@app.post("/admin/admins")
+@app.get("/admin/admins")
 async def	browse_admins():
 	return (shop.admins)
 
+@app.get("/admin/products")
+async def	products(name:Optional[str] = None, in_type:Optional[str] = None):
+	return (product_cat.browse_product(name, in_type, all = True))
 

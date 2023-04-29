@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Products</title>
+</head>
+<body>
+    <h1>Browse Products</h1>
+    <table id="products-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Stock</th>
+                <th>Specify</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="products-table-body">
+        </tbody>
+    </table>
+
+    <script>
+        async function fetchProducts() {
+            const response = await fetch('http://127.0.0.1:8000/admin/products');
+            const data = await response.json();
+            return data;
+        }
+
+        async function deleteProduct(product_id) {
+            const response = await fetch(`http://127.0.0.1:8000/admin/del_product/${product_id}`, { method: 'DELETE' });
+            const result = await response.text();
+			console.log(result)
+            if (result != "KO") {
+                alert(`Product ID ${product_id} deleted successfully.`);
+                location.reload();
+            } else {
+                alert(`Failed to delete Product ID ${product_id}.`);
+            }
+        }
+
+        function displayProducts(products) {
+            const tableBody = document.getElementById('products-table-body');
+            for (const product of products) {
+                const row = document.createElement('tr');
+                const idCell = document.createElement('td');
+                const nameCell = document.createElement('td');
+                const priceCell = document.createElement('td');
+                const descriptionCell = document.createElement('td');
+                const typeCell = document.createElement('td');
+                const stockCell = document.createElement('td');
+                const specifyCell = document.createElement('td');
+                const actionCell = document.createElement('td');
+                const deleteButton = document.createElement('button');
+
+                idCell.textContent = product.id;
+                nameCell.textContent = product._Product__name;
+                priceCell.textContent = product.price;
+                descriptionCell.textContent = product.description;
+                typeCell.textContent = product.type.join(', ');
+                stockCell.textContent = product.stock;
+                specifyCell.textContent = product.specify;
+
+                deleteButton.textContent = 'Delete';
+                deleteButton.onclick = () => deleteProduct(product.id);
+                actionCell.appendChild(deleteButton);
+
+                row.appendChild(idCell);
+                row.appendChild(nameCell);
+                row.appendChild(priceCell);
+                row.appendChild(descriptionCell);
+                row.appendChild(typeCell);
+                row.appendChild(stockCell);
+                row.appendChild(specifyCell);
+                row.appendChild(actionCell);
+
+                tableBody.appendChild(row);
+            }
+        }
+
+        async function init() {
+            const products = await fetchProducts();
+            displayProducts(products);
+        }
+
+        init();
+    </script>
+</body>
+</html>
