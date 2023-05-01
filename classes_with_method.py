@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/04/30 05:07:22 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/05/01 21:18:24 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -104,7 +104,7 @@ class ProductCatalog:
 
 
 	
-	def view_product(self, product_id):
+	def view_product(self, product_id, all = False):
 		# this method need to implement all the same product but difference SPECIFY and each left stock
 		products = self.get_products_by_id(product_id)
 		specify_dict = {}
@@ -195,7 +195,7 @@ shop = Shop()
 class	Product:
 	def __init__(self, product_name:str, product_price:int, product_description: str, product_detail : str, product_type : list, product_stock : int, product_specify : str):
 		self.id =  product_id_gen.generateID()
-		self.__name = product_name
+		self.name = product_name
 		self.price = product_price
 		self.description = product_description
 		self.detail = product_detail
@@ -203,9 +203,9 @@ class	Product:
 		self.stock = product_stock
 		self.specify = product_specify
 
-	@property 
-	def	name(self):
-		return(self.__name)
+	# @property 
+	# def	name(self):
+	# 	return(self.__name)
 	
 	def already_exist_in(self, product_list):
 		for product in product_list:

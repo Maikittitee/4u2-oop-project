@@ -155,14 +155,20 @@ async def	add_new_admin(name, salary:int, username, email, password):
 	return ("KO")
 
 @app.post("/admin/add_product")
-async def	add_product(name, price:int, specify, stock:int, description, detail, p_type:str): #p_type example : "Lips,Eye" (NO SPACE, ONLY COMMA(,))
-	product_cat.add_product(name, price, specify, stock, description, detail, p_type)
+async def	add_product(data: dict): #p_type example : "Lips,Eye" (NO SPACE, ONLY COMMA(,))
+	product_cat.add_product(data["name"], data["price"], data["specify"], data["stock"], data["description"], data["detail"], data["p_type"])
 	return ("OK")
 
+@app.post("/admin/modify_product/{target_product_id}")
+async def	modify_product(target_product_id, data:dict):
+	if (product_cat.modify_product(target_product_id, data["product_name"], int(data["product_price"]), data["product_description"], data["product_detail"], data["product_type"], int(data["product_stock"]), data["product_specify"])):
+		return ("OK")
+	return ("KO")
+
 @app.post("/admin/add_promotion")
-async def	add_promotion(product_ids:str, day_start:int,  month_start:int,  year_start:int, day_end:int,  month_end:int,  year_end:int, discount:int):
-	if (shop.add_promotion(product_ids, datetime(year_start, month_start, month_end), datetime(year_end, month_end, day_end), discount)):
-		return (product_ids)
+async def	add_promotion(data:dict):
+	if (shop.add_promotion(str(data["product_ids"]), datetime(int(data["year_start"]), int(data["month_start"]), int(data["month_end"])), datetime(int(data["year_end"]), int(data["month_end"]), int(data["day_end"])), int(data["discount"]))):
+		return (data["product_ids"])
 	return ("KO")
 
 @app.delete("/admin/del_product/{product_id}")
@@ -177,19 +183,11 @@ async def	del_product(product_id:str):
 async def	browse_orders():
 	return (shop.browse_orders())
 
-@app.get("/admin/promotions")
-async def	browse_promotions():
-	return (shop.promotions)
-
-@app.get("/admin/users")
-async def	browse_users():
-	return (shop.users)
-
-@app.get("/admin/admins")
-async def	browse_admins():
-	return (shop.admins)
-
 @app.get("/admin/products")
 async def	products(name:Optional[str] = None, in_type:Optional[str] = None):
 	return (product_cat.browse_product(name, in_type, all = True))
+
+@app.get("/admin/promotions")
+async def	browse_promotions():
+	return (shop.promotions)
 
