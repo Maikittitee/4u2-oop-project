@@ -62,24 +62,24 @@ async def	make_purchase(username:str, address_index:int):
 	return ("KO")
 
 @app.get("/Auth/login")
-async def	login(username: str, password: str):
+async def	login(data:dict):
 	user = User(0)
-	if (user.login(username, password)):
-		return (username)
+	if (user.login(data["username"], data["password"])):
+		return (data["username"])
 	return ("KO")
 
 @app.post("/Auth/register")
-async def	register(username:str, email:str, password:str):
+async def	register(data:dict):
 	guest = Guest()
-	new = guest.register(username, email, password) 
+	new = guest.register(data["username"], data["email"], data["password"]) 
 	if (new):
 		shop.users.append(new)
 		return (new.name)
 	return ("KO")
 
 @app.post("/Auth/logout")
-async def	logout(username : str):
-	if (shop.get_user_by_username(username).logout()):
+async def	logout(data:dict):
+	if (shop.get_user_by_username(data["username"]).logout()):
 		return ("OK")
 	return ("KO")
 
@@ -88,7 +88,7 @@ async def	get_orders(username):
 	print(shop.get_user_by_username(username).order)
 	return (shop.get_user_by_username(username).get_user_order())
 
-@app.post("/Users/{username}/confirm_payment")
+@app.get("/Users/{username}/confirm_payment")
 async def	confirm_payment(order_id, username, amount:int):
 	order = shop.get_user_by_username(username).get_order_by_id(order_id)
 	if (not order):
@@ -97,7 +97,7 @@ async def	confirm_payment(order_id, username, amount:int):
 		return ("OK")
 	return ("KO")
 
-@app.post("/feat/orders")
+@app.get("/feat/orders")
 async def	view_order(email, order_id):
 	ret = shop.get_user_by_email(email).get_order_by_id(order_id).get_order_detail()
 	if (ret):
@@ -105,10 +105,10 @@ async def	view_order(email, order_id):
 	return ("KO")
 
 @app.post("/users/{username}/editinfo")
-async def	change_info(username, new_name, new_tel):
+async def	change_info(username, data:dict):
 	user = shop.get_user_by_username(username)
-	user.name = new_name
-	user.tel = new_tel
+	user.name = data["new_name"]
+	user.tel = data["new_tel"]
 
 @app.post("/users/{username}/add_address")
 async def	add_address(name, address, tel, username, type:int = 0):
@@ -129,9 +129,9 @@ async def	del_address(address_index:int, username):
 	return ("OK")
 
 @app.post("/users/{username}/change_password")
-async def	change_pass(new_pass, username):
-	user = shop.get_user_by_username(username)
-	user.account.password = new_pass
+async def	change_pass(data:dict):
+	user = shop.get_user_by_username(data["username"])
+	user.account.password = data["new_pass"]
 	return ("OK")
 
 # ADMIN SIDE API 
