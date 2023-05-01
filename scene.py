@@ -11,6 +11,8 @@ product_cat.add_product("Keychorn Q1", 6790, "Blue", 12, "First Keychron custom 
 admin1 = Admin("Krittithee Tuncharoen",10000,"admin1","admin1@gmail.com","pass1")
 # admin2 = Admin("Jirapat Treesuwan",10000,"admin2","admin2@gmail.com","pass2")
 
+shop.admins.append(admin1)
+
 guest = Guest()
 customer = guest.register("user","maikittitee@gmail.com","pass")
 if (customer.login("user","pass")):

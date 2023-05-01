@@ -136,11 +136,15 @@ async def	change_pass(data:dict):
 
 # ADMIN SIDE API 
 
+
+
 @app.post("/admin/login")
-async def	admin_login(username:str, password:str):
+async def	admin_login(data:dict):
+	print(data["username"])
+	print(data["password"])
 	user = User(0)
-	if (user.login(username, password, 1)):
-		return (username)
+	if (user.login(data["username"], data["password"], 1)):
+		return (data["username"])
 	return ("KO")
 
 @app.post("/admin/register")
@@ -151,14 +155,20 @@ async def	add_new_admin(name, salary:int, username, email, password):
 	return ("KO")
 
 @app.post("/admin/add_product")
-async def	add_product(name, price:int, specify, stock:int, description, detail, p_type:str): #p_type example : "Lips,Eye" (NO SPACE, ONLY COMMA(,))
-	product_cat.add_product(name, price, specify, stock, description, detail, p_type)
+async def	add_product(data: dict): #p_type example : "Lips,Eye" (NO SPACE, ONLY COMMA(,))
+	product_cat.add_product(data["name"], data["price"], data["specify"], data["stock"], data["description"], data["detail"], data["p_type"])
 	return ("OK")
 
+@app.post("/admin/modify_product/{target_product_id}")
+async def	modify_product(target_product_id, data:dict):
+	if (product_cat.modify_product(target_product_id, data["product_name"], int(data["product_price"]), data["product_description"], data["product_detail"], data["product_type"], int(data["product_stock"]), data["product_specify"])):
+		return ("OK")
+	return ("KO")
+
 @app.post("/admin/add_promotion")
-async def	add_promotion(product_ids:str, day_start:int,  month_start:int,  year_start:int, day_end:int,  month_end:int,  year_end:int, discount:int):
-	if (shop.add_promotion(product_ids, datetime(year_start, month_start, month_end), datetime(year_end, month_end, day_end), discount)):
-		return (product_ids)
+async def	add_promotion(data:dict):
+	if (shop.add_promotion(str(data["product_ids"]), datetime(int(data["year_start"]), int(data["month_start"]), int(data["month_end"])), datetime(int(data["year_end"]), int(data["month_end"]), int(data["day_end"])), int(data["discount"]))):
+		return (data["product_ids"])
 	return ("KO")
 
 @app.delete("/admin/del_product/{product_id}")
@@ -169,20 +179,15 @@ async def	del_product(product_id:str):
 	product_cat.products.remove(target_product)
 	return ("OK")
 
-@app.post("/admin/orders")
+@app.get("/admin/orders")
 async def	browse_orders():
 	return (shop.browse_orders())
 
-@app.post("/admin/promotions")
+@app.get("/admin/products")
+async def	products(name:Optional[str] = None, in_type:Optional[str] = None):
+	return (product_cat.browse_product(name, in_type, all = True))
+
+@app.get("/admin/promotions")
 async def	browse_promotions():
 	return (shop.promotions)
-
-@app.post("/admin/users")
-async def	browse_users():
-	return (shop.users)
-
-@app.post("/admin/admins")
-async def	browse_admins():
-	return (shop.admins)
-
 
