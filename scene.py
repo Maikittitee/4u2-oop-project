@@ -22,5 +22,6 @@ shop.add_promotion("1,3", datetime(2004,4,9), datetime(2025,4,9), 50)
 
 customer.shopping_cart.add_to_cart(product_cat.get_inst_product_by_id("1"), 2)
 customer.shopping_cart.add_to_cart(product_cat.get_inst_product_by_id("2"), 1)
-
+addr = ShippingAddress("Krittihee Tuncharoen", "ECC-999", "0951018285")
+customer.address.append(addr)
 print(shop.admins)

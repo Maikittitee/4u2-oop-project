@@ -54,14 +54,14 @@ async def	add_to_cart(username:str, product_id:str, quantity:int):
 		return (ret)
 	return ("KO")
 
-@app.post("/Users/{username}/cart/checkout")
-async def	make_purchase(username:str, address_index:int):
-	user = shop.get_user_by_username(username)
-	if (user.make_purchase(user.address[address_index])):
+@app.post("/cart/checkout")
+async def	checkout(data:dict):
+	user = shop.get_user_by_username(data["username"])
+	if (user.make_purchase(user.address[data["address_index"]])):
 		return ("OK")
 	return ("KO")
 
-@app.get("/Auth/login")
+@app.post("/Auth/login")
 async def	login(data:dict):
 	user = User(0)
 	if (user.login(data["username"], data["password"])):
@@ -184,7 +184,7 @@ async def	browse_orders():
 	return (shop.browse_orders())
 
 @app.get("/admin/products")
-async def	products(name:Optional[str] = None, in_type:Optional[str] = None):
+async def	admin_browse_products(name:Optional[str] = None, in_type:Optional[str] = None):
 	return (product_cat.browse_product(name, in_type, all = True))
 
 @app.get("/admin/promotions")

@@ -51,12 +51,8 @@
             });
 
             const result = await response.text();
-            if (result !== "KO") {
-                alert("Promotion added successfully.");
-                document.getElementById("add-promotion-form").reset();
-            } else {
-                alert("Failed to add the promotion.");
-            }
+			console.log(result);
+            alert(result);
         });
     </script>
 </body>
