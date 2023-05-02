@@ -62,11 +62,21 @@
 </head>
 <body>
     <h1>Browse Products</h1>
+	<!-- <input placeholder="search production" type="text" value="search" onchange="(e) => {e.target.value}" /> -->
     <div class="nav-bar">
-        <a class="nav-link" href="confirm_payment.html">Confirm Payment</a>
+		<a class="nav-link" href="confirm_payment.html">Confirm Payment</a>
         <a class="nav-link" href="user_info.html">User Info</a>
         <a class="nav-link" href="view_cart.html">View Cart</a>
         <a class="nav-link" href="view_order.html">View Orders</a>
+    </div>
+    <div>
+        <label for="product-type-filter">Filter by type:</label>
+        <select id="product-type-filter">
+            <option value="">All</option>
+            <option value="Lips">Lips</option>
+            <option value="keyboard">Keyboard</option>
+            <option value="gadget">Gadget</option>
+        </select>
     </div>
     <ul id="products-list"></ul>
 
@@ -91,14 +101,25 @@
             return li;
         }
 
-        async function init() {
-            const products = await fetchProducts();
+        function displayProducts(products, filterType) {
             const productsList = document.getElementById("products-list");
+            productsList.innerHTML = "";
 
             for (const product of products) {
-                const productItem = createProductItem(product);
-                productsList.appendChild(productItem);
+                if (!filterType || product.type.includes(filterType)) {
+                    const productItem = createProductItem(product);
+                    productsList.appendChild(productItem);
+                }
             }
+        }
+
+        async function init() {
+            const products = await fetchProducts();
+            displayProducts(products);
+
+            document.getElementById("product-type-filter").addEventListener("change", (event) => {
+                displayProducts(products, event.target.value);
+            });
         }
 
         init();
