@@ -54,11 +54,19 @@ async def	add_to_cart(username:str, product_id:str, quantity:int):
 		return (ret)
 	return ("KO")
 
+@app.get("/Products/{product_id}/add_to_fav")
+async def	add_to_fav(username, product_id):
+	user = shop.get_user_by_username(username)
+	user.add_to_favorite(product_id)
+	return ("OK")
+
+
 @app.post("/cart/checkout")
 async def	checkout(data:dict):
 	user = shop.get_user_by_username(data["username"])
-	if (user.make_purchase(user.address[data["address_index"]])):
-		return ("OK")
+	new_order = user.make_purchase(user.address[data["address_index"]]) 
+	if (new_order):
+		return (new_order.order_id)
 	return ("KO")
 
 @app.post("/Auth/login")
@@ -110,7 +118,7 @@ async def	change_info(username, data:dict):
 	user.name = data["new_name"]
 	user.tel = data["new_tel"]
 
-@app.post("/users/{username}/add_address")
+@app.get("/users/{username}/add_address")
 async def	add_address(name, address, tel, username, type:int = 0):
 	user = shop.get_user_by_username(username)
 	if (type == 0):
@@ -133,6 +141,13 @@ async def	change_pass(data:dict):
 	user = shop.get_user_by_username(data["username"])
 	user.account.password = data["new_pass"]
 	return ("OK")
+
+@app.get("/users/{username}/favorite")
+async def get_fav(username):
+	user = shop.get_user_by_username(username)
+	return (user.favorite)
+
+
 
 # ADMIN SIDE API 
 

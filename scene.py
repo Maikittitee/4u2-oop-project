@@ -24,4 +24,7 @@ customer.shopping_cart.add_to_cart(product_cat.get_inst_product_by_id("1"), 2)
 customer.shopping_cart.add_to_cart(product_cat.get_inst_product_by_id("2"), 1)
 addr = ShippingAddress("Krittihee Tuncharoen", "ECC-999", "0951018285")
 customer.address.append(addr)
+
+customer.make_purchase(addr)
+
 print(shop.admins)

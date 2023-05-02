@@ -74,38 +74,40 @@
 
             return tr;
         }
-		async function init() {
-			const cartData = await fetchCart("user");
-			const tableBody = document.getElementById("cart-table").getElementsByTagName("tbody")[0];
 
-			for (const cartItemId in cartData.available_item) {
-				const cartItem = cartData.available_item[cartItemId];
-				const cartItemRow = createCartItemRow(cartItemId, cartItem);
-				tableBody.appendChild(cartItemRow);
-			}
+        async function init() {
+            const cartData = await fetchCart("user");
+            const tableBody = document.getElementById("cart-table").getElementsByTagName("tbody")[0];
 
-			document.getElementById("total").innerText = cartData.total;
+            for (const cartItemId in cartData.available_item) {
+                const cartItem = cartData.available_item[cartItemId];
+                const cartItemRow = createCartItemRow(cartItemId, cartItem);
+                tableBody.appendChild(cartItemRow);
+            }
 
-			document.getElementById("checkout-button").addEventListener("click", async () => {
-				const addressIndex = 0; // You can change this to the desired address index
-				const username = "user";
-				const response = await fetch(`http://127.0.0.1:8000/cart/checkout`, {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify({username: username, address_index: addressIndex})
-				});
-				const result = await response.text();
-				console.log(result);
-				if (result != "KO") {
-					alert("Checkout successful!");
-				} else {
-					alert("Checkout failed.");
-				}
-			});
-		}
+            document.getElementById("total").innerText = cartData.total;
 
+            document.getElementById("checkout-button").addEventListener("click", async () => {
+                const addressIndex = 0; // You can change this to the desired address index
+                const username = "user";
+                const response = await fetch(`http://127.0.0.1:8000/cart/checkout`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({username: username, address_index: addressIndex})
+                });
+                const result = await response.text();
+                console.log(result);
+                if (result != "KO") {
+                    alert
+					const newOrderId = result
+                    alert(`Checkout successful! Your order ID is: ${newOrderId}`);
+                } else {
+                    alert("Checkout failed.");
+                }
+            });
+        }
 
         init();
     </script>

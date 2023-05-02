@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/05/02 09:13:46 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/05/02 09:38:45 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -574,6 +574,8 @@ class	Order:
 		return (total)
 
 	def	confirm_payment(self, amount):
+		if (self.payment.status == OrderStatus.CONFIRMED):
+			return (0)
 		if (amount >= self.cal_total()):
 			self.payment.status = OrderStatus.CONFIRMED
 			self.shipping_info.date_shipping = datetime(datetime.now().year, datetime.now().month, datetime.now().day)

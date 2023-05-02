@@ -27,11 +27,12 @@
         <input type="number" id="quantity" name="quantity" min="1" value="1">
     </div>
     <button id="add-to-cart">Add to Cart</button>
+    <button id="add-to-favorite">Add to Favorite</button>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const productId = urlParams.get("id");
-        const username = ""; // Replace this with the actual username of the logged-in user
+        const username = "user"; // Replace this with the actual username of the logged-in user
 
         async function fetchProductById(id) {
             const response = await fetch(`http://127.0.0.1:8000/Products/${id}`);
@@ -62,22 +63,38 @@
             return result;
         }
 
+        async function addToFavorite(username, productId) {
+            const response = await fetch(`http://127.0.0.1:8000/Products/${productId}/add_to_fav?username=${username}`);
+            const result = await response.text();
+            return result;
+        }
+
         document.getElementById("add-to-cart").addEventListener("click", async () => {
             const quantity = document.getElementById("quantity").value;
             const result = await addToCart(username, productId, quantity);
             if (result !== "KO") {
                 alert("Product added to cart successfully.");
-            } else {
-                alert("Failed to add product to cart.");
-            }
-        });
-
-        async function init() {
-            const product = await fetchProductById(productId);
-            setProductDetail(product);
+			} else {
+			alert("Failed to add product to cart.");
+			}
+			});
+			document.getElementById("add-to-favorite").addEventListener("click", async () => {
+        const result = await addToFavorite(username, productId);
+        if (result !== "KO") {
+            alert("Product added to favorites successfully.");
+        } else {
+            alert("Failed to add product to favorites.");
         }
+    });
 
-        init();
+    async function init() {
+        const product = await fetchProductById(productId);
+        setProductDetail(product);
+    }
+
+    init();
 </script>
 </body>
 </html>
+
+
