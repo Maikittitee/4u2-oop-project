@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/05/01 21:18:24 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/05/02 09:13:46 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -439,7 +439,7 @@ class AuthenticationUser(Customer):
 			self.order.append(new_order)
 			shop.orders.append(new_order)
 			self.shopping_cart.clear()
-			return (1)
+			return (new_order)
 		return (0)
 	
 
