@@ -34,10 +34,6 @@ app.add_middleware(
 customer = APIRouter()
 admin = APIRouter()
 
-@app.get("/")
-async def	root():
-	return ({"msg":"Welcome to root path, there are nothing here, better give a specific path  , for example , /Products or /Users"})
-
 # example 127.0.0.1:58742/Products?name=Keychron
 # example 127.0.0.1:58742/Products?in_type=Lips
 @app.get("/Products")
@@ -50,28 +46,16 @@ async def	view_product(product_id : str):
 
 @app.get("/Users/{username}")
 async def	view_user_detail(username : str):
-	# need to check searching name is a guy who search or not ... but how? -> Ohm said it's FRONTEND problem so yeah im not gonna do it.
 	print(shop.users)
 	if (shop.get_user_by_username(username)):
 		return (shop.get_user_by_username(username).get_user_detail())
 	return ("KO")
-	# return ("H)
-
-
 
 @app.get("/Products/{product_id}/add_to_fav")
 async def	add_to_fav(username, product_id):
 	user = shop.get_user_by_username(username)
 	user.add_to_favorite(product_id)
 	return ("OK")
-
-# @app.post("/Auth/login")
-# async def	login(body: UserPass):
-# 	user = User(0)
-# 	if (user.login(body.username, body.password)):
-# 		return (body.username)
-# 	return ("KO")
-
 
 @app.post("/Auth/login")
 async def	login(data:dict):
@@ -127,17 +111,6 @@ async def	change_info(username, data:dict):
 	user.name = data["new_name"]
 	user.tel = data["new_tel"]
 
-@app.get("/users/{username}/add_address")
-async def	add_address(name, address, tel, username, type:int = 0):
-	user = shop.get_user_by_username(username)
-	if (type == 0):
-		addr = ShippingAddress(name, address, tel)
-	elif (type == 1):
-		addr = TaxInvoiceAddress(name, address, tel)
-	else:
-		return ("KO")
-	user.address.append(addr)
-	return ("OK")
 
 @app.delete("/users/{username}/del_address")
 async def	del_address(address_index:int, username):
@@ -145,11 +118,6 @@ async def	del_address(address_index:int, username):
 	user.address.pop(address_index)
 	return ("OK")
 
-@app.post("/users/{username}/change_password")
-async def	change_pass(data:dict):
-	user = shop.get_user_by_username(data["username"])
-	user.account.password = data["new_pass"]
-	return ("OK")
 
 @app.get("/users/{username}/favorite")
 async def get_fav(username):
@@ -178,22 +146,7 @@ async def	add_to_cart(username:str, product_id:str, quantity:int):
 		return (ret)
 	return ("KO")
 
-
-@app.put("/Users/{username}/cart/change_quantity")
-async def change_quantity(username, index, new_quantity):
-	cart = shop.get_user_by_username(username).shopping_cart
-	cart.change_quantity(new_quantity, index)
-	return ("OK")
-
-@app.delete("/Users/{username}/cart/remove_item")
-async def remove_item(username, index):
-	cart = shop.get_user_by_username(username).shopping_cart
-	cart.remove_from_cart(index)
-	return ("OK")
-
-
 # ADMIN SIDE API 
-
 
 @app.post("/admin/login")
 async def	admin_login(data:dict):
@@ -202,13 +155,6 @@ async def	admin_login(data:dict):
 	user = User(0)
 	if (user.login(data["username"], data["password"], 1)):
 		return (data["username"])
-	return ("KO")
-
-@app.post("/admin/register")
-async def	add_new_admin(name, salary:int, username, email, password):
-	new_admin = Admin(name, salary, username, email, password)
-	if (new_admin.register(username, email)):
-		return (username)
 	return ("KO")
 
 @app.post("/admin/add_product")
@@ -236,10 +182,6 @@ async def	del_product(product_id:str):
 	product_cat.products.remove(target_product)
 	return ("OK")
 
-@app.get("/admin/orders")
-async def	browse_orders():
-	return (shop.browse_orders())
-
 @app.get("/admin/products")
 async def	admin_browse_products(name:Optional[str] = None, in_type:Optional[str] = None):
 	return (product_cat.browse_product(name, in_type, all = True))
@@ -247,11 +189,3 @@ async def	admin_browse_products(name:Optional[str] = None, in_type:Optional[str]
 @app.get("/admin/promotions")
 async def	browse_promotions():
 	return (shop.promotions)
-
-@app.put("/orders/{order_id}/set_delivered")
-async def	set_delivered(order_id):
-	order =  shop.get_order_by_id(order_id)
-	if (not order):
-		return ("KO")
-	order.shipping_info.set_delivered()
-	return ("OK")
