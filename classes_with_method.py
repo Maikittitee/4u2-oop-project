@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/05/03 16:10:46 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/05/03 17:37:49 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -150,7 +150,7 @@ class Shop:
 		self.product_catalog = product_cat #AGRET ProductCatalog
 		self.users = [] #AGGRESION User --> # KEEP ONLY AUTHENTICATIONUSER !!!
 		self.admins = []
-		self.promotions = [] # AGGRESTION Promotion\
+		self.promotions = [] # AGGRESTION Promotion
 		self.orders = []
 
 	def	add_promotion(self, product_ids:str, date_start, date_end, discount):
@@ -300,7 +300,7 @@ class User: #ABTRACT CLASS ...... STOPPPP DONT ASK ME ANYTHING > EVERY CLASS CAN
 	def	__init__(self,id):
 		self.user_id = id
 		self.name = None
-		self.shop = shop ##########################################################################
+		# self.shop = shop ##########################################################################
 		self.status = UserStatus.OFFLINE
 
 	def	login(self,username, password, type:Optional[int] = 0): #####################################
@@ -333,7 +333,7 @@ class Admin(User):
 		self.name = username
 		self.real_name = name
 
-	def	register(self, username, email):
+	def	register(self, username, email): ###################################
 		for admin in self.shop.admins:
 			if (username == admin.name):
 				return (0)
