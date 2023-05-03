@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/05/03 17:49:45 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/05/03 20:56:32 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -433,7 +433,7 @@ class AuthenticationUser(Customer):
 		new_order = self.shopping_cart.checkout(self, address)
 		if (new_order): 
 			self.order.append(new_order)
-			shop.orders.append(new_order) #####  this line ########################################################################################
+			shop.orders.append(new_order)
 			self.shopping_cart.clear()
 			return (new_order)
 		return (0)
@@ -457,12 +457,23 @@ class	ShoppingCart:
 	def clear(self):
 		self.items = []
 
+	def	is_already_contain(self, product):
+		for item in self.items:
+			if (item.product == product):
+				return (item)
+		return (0)
+
+
 	def	add_to_cart(self, product, quantity):
 
-		# need to fix in case that new_product is already exist in the cart -> need to increment its quantity
 		if (product.stock < quantity):
 			return (0)
-		item = Item(product, quantity, self.get_promotion(product)) 
+		is_exist = self.is_already_contain(product) 
+		if (is_exist and is_exist.quantity + quantity <= product.stock):
+			print("here")
+			is_exist.quantity += quantity
+			return (is_exist.get_item_detail())
+		item = Item(product, quantity, self.get_promotion(product))
 		self.items.append(item)
 		return (item.get_item_detail())
 	
