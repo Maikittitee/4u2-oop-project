@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/05/03 17:37:49 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/05/03 17:49:45 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -184,6 +184,18 @@ class Shop:
 			if (user.account.email == email):
 				return (user)
 		return (None)
+	
+	def	register_approval(self, username: str, email: str, role = 0):
+		if (role == 0):
+			src = self.users
+		else:
+			src = self.admins
+		for user in src :
+			if (username == user.name):
+				return (0)
+			if (email == user.account.email):
+				return (0)
+		return (1)
 		
 shop = Shop()
 
@@ -306,9 +318,9 @@ class User: #ABTRACT CLASS ...... STOPPPP DONT ASK ME ANYTHING > EVERY CLASS CAN
 	def	login(self,username, password, type:Optional[int] = 0): #####################################
 		print(f"type: {type}")
 		if (type == 0):
-			src = self.shop.users
+			src = shop.users
 		else:
-			src = self.shop.admins
+			src = shop.admins
 		for user in src:
 			if (username == user.name):
 				if (password == user.account.password):
@@ -334,12 +346,9 @@ class Admin(User):
 		self.real_name = name
 
 	def	register(self, username, email): ###################################
-		for admin in self.shop.admins:
-			if (username == admin.name):
-				return (0)
-			if (email == admin.email):
-				return (0)
-		self.shop.admins.append(self)
+		if (not shop.register_approval(username, email, type = 1)):
+			return (0)
+		shop.admins.append(self)
 		return (1)
 		
 class Customer(User):
@@ -352,17 +361,17 @@ class Guest(Customer):
 		Customer.__init__(self)
 
 	def	register(self, username, email, password): #######################################################
-
-		for customer in self.shop.users:
-			if (username == customer.name):
-				return (0)
-		for user in self.shop.users:
-			if (email == user.account.email):
-				return (0)
+		if (not shop.register_approval(username, email)):
+			return (0)	
+		# for customer in self.shop.users:
+		# 	if (username == customer.name):
+		# 		return (0)
+		# for user in self.shop.users:
+		# 	if (email == user.account.email):
+		# 		return (0)
 			
-		new_customer = AuthenticationUser(username, email, password)
-		
-		self.shop.users.append(new_customer)
+		new_customer = AuthenticationUser(username, email, password)	
+		shop.users.append(new_customer)
 		return (new_customer)
 
 class AuthenticationUser(Customer):

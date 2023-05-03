@@ -5,6 +5,21 @@ from fastapi import FastAPI, APIRouter
 from typing import Optional
 from scene import *
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+
+
+# class UserPass(BaseModel):
+# 	username: str
+# 	password: str
+	
+# 	class Config:
+# 		schema_extra = {
+#             "example": {
+#                 "username": "username",
+# 				"password": "password",
+#             }
+#         }
+
 
 app = FastAPI()
 
@@ -50,6 +65,12 @@ async def	add_to_fav(username, product_id):
 	user.add_to_favorite(product_id)
 	return ("OK")
 
+# @app.post("/Auth/login")
+# async def	login(body: UserPass):
+# 	user = User(0)
+# 	if (user.login(body.username, body.password)):
+# 		return (body.username)
+# 	return ("KO")
 
 
 @app.post("/Auth/login")
