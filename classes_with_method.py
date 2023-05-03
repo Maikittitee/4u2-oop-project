@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/05/03 21:15:56 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/05/04 00:30:15 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ from __future__ import annotations
 from datetime import datetime, date
 from enum import Enum
 from typing import Optional
-
+from rich import inspect as insp
 
 #current_date = datetime(datetime.year, datetime.month, datetime.day)
 
@@ -262,6 +262,19 @@ class	Item:
 			"price":self.quantity * self.product.price * (100 - self.promotion.discount)/100 
 		}
 		return (ret_dict)
+	
+	def get_item_list_detail(self):
+		ret_dict = {
+			"id":self.product.id,
+			"product_name":self.product.name,
+			"product_price":self.product.price,
+			"discount":self.promotion.discount,
+			"price_after_discount": self.product.price * (100 - self.promotion.discount)/100 ,
+			"quantity":self.quantity,
+			"price":self.quantity * self.product.price * (100 - self.promotion.discount)/100 
+		}
+		return (ret_dict)
+
 
 promotion_id_gen = ID()
 
@@ -418,9 +431,10 @@ class AuthenticationUser(Customer):
 		}
 		)
 	def	get_user_order(self):
-		ret_dict = {}
+		ret_dict = []
 		for order in self.order:
-			ret_dict.update({order.order_id : order.get_order_detail()})
+			ret_dict.append(order.get_order_detail())
+		insp(ret_dict)
 		return (ret_dict)
 	
 	def	get_order_by_id(self, order_id):
@@ -566,9 +580,9 @@ class	Order:
 		self.payment = Payment(payment_id_gen.generateID(), 0, OrderStatus.PENDING, self, user.name, user.account.email, user.tel) # Asso Payment
 	
 	def get_order_detail(self):
-		item_dict = {}
+		item_dict = []
 		for item in self.items:
-			item_dict.update({item.product.id:item.get_item_detail()})
+			item_dict.append(item.get_item_list_detail())
 		return {
 			"user":self.user.name,
 			"id":self.order_id,

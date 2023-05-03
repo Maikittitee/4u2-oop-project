@@ -55,6 +55,8 @@
         <button id="delete-address-button">Delete Address</button>
         <h3>Favorite Products</h3>
         <div id="user-favorites"></div>
+        <h3>Order History</h3>
+        <div id="user-orders"></div>
     </div>
 
     <script>
@@ -98,12 +100,37 @@
                     favoritesDiv.appendChild(productDiv);
                 }
 
+                // Fetch and display order history
+                const ordersResponse = await fetch(`http://127.0.0.1:8000/Users/${username}/orders`);
+                const orders = await ordersResponse.json();
+                const ordersDiv = document.getElementById("user-orders");
+                ordersDiv.innerHTML = '';
+                for (const order of orders) {
+                    // console.dir(order)
+                    const orderDiv = document.createElement("div");
+                    orderDiv.innerHTML = `
+                    <h4>Order ID: ${order.id}</h4>
+                    <p>Order Date: ${order.create}</p>
+                    <p>Order Status: ${order.payment_status}</p>
+                    <p>Order Amount: ${order.total}</p>
+                    `;
+                    console.log(":D")
+                    ordersDiv.appendChild(orderDiv);
+                    for (const item of order.items) {
+                        console.dir(item)
+                        const itemDiv = document.createElement("p");
+                        itemDiv.innerHTML = `
+                            ${item.product_name}
+                        `
+                        orderDiv.appendChild(itemDiv)
+                    }
+                }
+
                 document.getElementById("user-details").style.display = "block";
             } else {
                 alert("Failed to fetch user details.");
             }
         }
-
         document.getElementById("view-user-details").addEventListener("click", () => {
             fetchUserDetails("user");
         });
@@ -128,4 +155,3 @@
     </script>
 </body>
 </html>
-

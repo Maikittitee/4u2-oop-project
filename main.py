@@ -100,7 +100,7 @@ async def	view_order(email, order_id):
 
 # info feat
 
-@app.post("/Users/{username}/orders")
+@app.get("/Users/{username}/orders")
 async def	get_user_orders(username):
 	print(shop.get_user_by_username(username).order)
 	return (shop.get_user_by_username(username).get_user_order())
