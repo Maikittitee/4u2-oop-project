@@ -36,35 +36,35 @@ admin = APIRouter()
 
 # example 127.0.0.1:58742/Products?name=Keychron
 # example 127.0.0.1:58742/Products?in_type=Lips
-@app.get("/Products")
+@app.get("/Products") # j
 async def	products(name:Optional[str] = None, in_type:Optional[str] = None):
 	return (product_cat.browse_product(name, in_type))
 
-@app.get("/Products/{product_id}")
+@app.get("/Products/{product_id}") # j
 async def	view_product(product_id : str):
 	return (product_cat.view_product(product_id))
 
-@app.get("/Users/{username}")
+@app.get("/Users/{username}") # j
 async def	view_user_detail(username : str):
 	print(shop.users)
 	if (shop.get_user_by_username(username)):
 		return (shop.get_user_by_username(username).get_user_detail())
 	return ("KO")
 
-@app.get("/Products/{product_id}/add_to_fav")
-async def	add_to_fav(username, product_id):
+@app.get("/Products/{product_id}/add_to_fav") # j
+async def	add_to_fav(username, product_id): 
 	user = shop.get_user_by_username(username)
 	user.add_to_favorite(product_id)
 	return ("OK")
 
-@app.post("/Auth/login")
+@app.post("/Auth/login") # n
 async def	login(data:dict):
 	user = User(0)
 	if (user.login(data["username"], data["password"])):
 		return (data["username"])
 	return ("KO")
 
-@app.post("/Auth/register")
+@app.post("/Auth/register") # i
 async def	register(data:dict):
 	guest = Guest()
 	new = guest.register(data["username"], data["email"], data["password"]) 
@@ -73,7 +73,7 @@ async def	register(data:dict):
 		return (new.name)
 	return ("KO")
 
-@app.post("/Auth/logout")
+@app.post("/Auth/logout") #n
 async def	logout(data:dict):
 	if (shop.get_user_by_username(data["username"]).logout()):
 		return ("OK")
@@ -82,7 +82,7 @@ async def	logout(data:dict):
 
 # system feat
 
-@app.get("/Users/{username}/confirm_payment")
+@app.get("/Users/{username}/confirm_payment") #n
 async def	confirm_payment(order_id, username, amount:int):
 	order = shop.get_user_by_username(username).get_order_by_id(order_id)
 	if (not order):
@@ -91,7 +91,7 @@ async def	confirm_payment(order_id, username, amount:int):
 		return ("OK")
 	return ("KO")
 
-@app.get("/feat/orders")
+@app.get("/feat/orders") # i
 async def	view_order(email, order_id):
 	ret = shop.get_user_by_email(email).get_order_by_id(order_id).get_order_detail()
 	if (ret):
@@ -105,21 +105,21 @@ async def	get_user_orders(username):
 	print(shop.get_user_by_username(username).order)
 	return (shop.get_user_by_username(username).get_user_order())
 
-@app.post("/users/{username}/editinfo")
+@app.post("/users/{username}/editinfo") # i
 async def	change_info(username, data:dict):
 	user = shop.get_user_by_username(username)
 	user.name = data["new_name"]
 	user.tel = data["new_tel"]
 
 
-@app.delete("/users/{username}/del_address")
+@app.delete("/users/{username}/del_address") # i
 async def	del_address(address_index:int, username):
 	user = shop.get_user_by_username(username)
 	user.address.pop(address_index)
 	return ("OK")
 
 
-@app.get("/users/{username}/favorite")
+@app.get("/users/{username}/favorite") #n
 async def get_fav(username):
 	user = shop.get_user_by_username(username)
 	return (user.favorite)
@@ -139,7 +139,7 @@ async def	view_cart(username : str):
 	# need to check searching name is a guy who search or not ... but how? -> im won't do this one neither.
 	return (shop.get_user_by_username(username).shopping_cart.show_cart())
 
-@app.get("/Products/{product_id}/add_to_cart")
+@app.get("/Products/{product_id}/add_to_cart") # i
 async def	add_to_cart(username:str, product_id:str, quantity:int):
 	ret = shop.get_user_by_username(username).shopping_cart.add_to_cart(product_cat.get_inst_product_by_id(product_id), quantity)
 	if (ret):
@@ -157,7 +157,7 @@ async def	admin_login(data:dict):
 		return (data["username"])
 	return ("KO")
 
-@app.post("/admin/add_product")
+@app.post("/admin/add_product") # j
 async def	add_product(data: dict): #p_type example : "Lips,Eye" (NO SPACE, ONLY COMMA(,))
 	product_cat.add_product(data["name"], data["price"], data["specify"], data["stock"], data["description"], data["detail"], data["p_type"])
 	return ("OK")
@@ -168,7 +168,7 @@ async def	modify_product(target_product_id, data:dict):
 		return ("OK")
 	return ("KO")
 
-@app.post("/admin/add_promotion")
+@app.post("/admin/add_promotion") # n
 async def	add_promotion(data:dict):
 	if (shop.add_promotion(str(data["product_ids"]), datetime(int(data["year_start"]), int(data["month_start"]), int(data["month_end"])), datetime(int(data["year_end"]), int(data["month_end"]), int(data["day_end"])), int(data["discount"]))):
 		return (data["product_ids"])
@@ -182,7 +182,7 @@ async def	del_product(product_id:str):
 	product_cat.products.remove(target_product)
 	return ("OK")
 
-@app.get("/admin/products")
+@app.get("/admin/products") # i
 async def	admin_browse_products(name:Optional[str] = None, in_type:Optional[str] = None):
 	return (product_cat.browse_product(name, in_type, all = True))
 
