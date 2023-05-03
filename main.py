@@ -178,15 +178,21 @@ async def	add_to_cart(username:str, product_id:str, quantity:int):
 		return (ret)
 	return ("KO")
 
-async def change_quantity(user, index, new_quantity):
-	pass
 
-async def remove_item():
-	pass
+@app.put("/Users/{username}/cart/change_quantity")
+async def change_quantity(username, index, new_quantity):
+	cart = shop.get_user_by_username(username).shopping_cart
+	cart.change_quantity(new_quantity, index)
+	return ("OK")
+
+@app.delete("/Users/{username}/cart/remove_item")
+async def remove_item(username, index):
+	cart = shop.get_user_by_username(username).shopping_cart
+	cart.remove_from_cart(index)
+	return ("OK")
 
 
 # ADMIN SIDE API 
-
 
 
 @app.post("/admin/login")
@@ -242,5 +248,10 @@ async def	admin_browse_products(name:Optional[str] = None, in_type:Optional[str]
 async def	browse_promotions():
 	return (shop.promotions)
 
+@app.put("/orders/{order_id}/set_delivered")
 async def	set_delivered(order_id):
-	pass
+	order =  shop.get_order_by_id(order_id)
+	if (not order):
+		return ("KO")
+	order.shipping_info.set_delivered()
+	return ("OK")

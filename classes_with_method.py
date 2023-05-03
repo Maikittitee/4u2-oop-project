@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/05/03 20:56:32 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/05/03 21:15:56 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -171,7 +171,12 @@ class Shop:
 			for order in user.order:
 				ret_dict.update({user.name : order.get_order_detail()})
 		return (ret_dict)
-
+	
+	def	get_order_by_id(self, id):
+		for order in self.orders:
+			if (order.order_id == id):
+				return (order)
+		return (0)
 	def get_user_by_username(self, username):
 		for user in self.users:
 			print(user.name)
@@ -490,7 +495,7 @@ class	ShoppingCart:
 
 	def	change_quantity(self, num ,index_of_item):
 		selected_item = self.get_item_by_index(index_of_item)
-		selected_item.quantity += num
+		selected_item.quantity = num
 		if (selected_item.quantity == 0):
 			self.items.remove(selected_item)
 
