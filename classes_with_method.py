@@ -6,7 +6,7 @@
 #    By: ktunchar <ktunchar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/21 23:17:03 by ktunchar          #+#    #+#              #
-#    Updated: 2023/05/02 09:38:45 by ktunchar         ###   ########.fr        #
+#    Updated: 2023/05/03 16:10:46 by ktunchar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -184,8 +184,7 @@ class Shop:
 			if (user.account.email == email):
 				return (user)
 		return (None)
-	
-	
+		
 shop = Shop()
 
 #########################################################
@@ -203,21 +202,15 @@ class	Product:
 		self.stock = product_stock
 		self.specify = product_specify
 
-	# @property 
-	# def	name(self):
-	# 	return(self.__name)
-	
 	def already_exist_in(self, product_list):
 		for product in product_list:
 			if (self.is_same_name(product)):
 				return (1)
 		return (0)
 
-
 	def	is_same_name(self, product):
 		return (self.name == product.name)
 	
-
 	def	get_product_detail(self):
 		return ({
 		"id" : self.id, 
@@ -242,8 +235,7 @@ class	Item:
 		return (0)
 	
 	def get_item_detail(self):
-		ret_dict = {}
-		# if (self.promotion != None):
+		ret_dict = {} 
 		ret_dict[self.product.id] = {
 			"product_name":self.product.name,
 			"product_price":self.product.price,
@@ -280,7 +272,7 @@ class Account:
 		self.email = email
 		self.password = password
 
-class Address:
+class Address: ### new class --> need to add to class dia
 	def	__init__ (self, name, address, tel):
 		self.name = name
 		self.address = address
@@ -304,14 +296,14 @@ class	UserStatus(Enum):
 	ONLINE = 1
 	OFFLINE = 0
 
-class User: #ABTRACT CLASS ...... STOPPPP DONT ASK ME ANYTHING > EVERY CLASS CAN BE ABTRACT CLASS
+class User: #ABTRACT CLASS ...... STOPPPP DONT ASK ME ANYTHING > EVERY CLASS CAN BE ABTRACT CLASS IF I WANT TO 
 	def	__init__(self,id):
 		self.user_id = id
 		self.name = None
-		self.shop = shop
+		self.shop = shop ##########################################################################
 		self.status = UserStatus.OFFLINE
 
-	def	login(self,username, password, type:Optional[int] = 0):
+	def	login(self,username, password, type:Optional[int] = 0): #####################################
 		print(f"type: {type}")
 		if (type == 0):
 			src = self.shop.users
@@ -350,21 +342,16 @@ class Admin(User):
 		self.shop.admins.append(self)
 		return (1)
 		
-
-		
-
 class Customer(User):
 	def __init__ (self):
 		User.__init__(self,user_id_gen.generateID())
 		self.shopping_cart = ShoppingCart() # Association ShoppingCart 
 
-	
-
 class Guest(Customer):
 	def	__init__ (self):
 		Customer.__init__(self)
 
-	def	register(self, username, email, password):
+	def	register(self, username, email, password): #######################################################
 
 		for customer in self.shop.users:
 			if (username == customer.name):
@@ -390,9 +377,9 @@ class AuthenticationUser(Customer):
 
 	def	add_address(self, name, address, tel, type):
 		if (type == AddressType.SHIPPING):
-			self.address.append(ShippingAddress(name, tel, type))
+			self.address.append(ShippingAddress(name, address, tel))
 		elif (type == AddressType.TAXINVOICE):
-			self.address.append(TaxInvoiceAddress(name, tel, type))
+			self.address.append(TaxInvoiceAddress(name, address, tel))
 
 	def	get_order_by_id(self, order_id):
 		for order in self.order:
@@ -437,25 +424,23 @@ class AuthenticationUser(Customer):
 		new_order = self.shopping_cart.checkout(self, address)
 		if (new_order): 
 			self.order.append(new_order)
-			shop.orders.append(new_order)
+			shop.orders.append(new_order) #####  this line ########################################################################################
 			self.shopping_cart.clear()
 			return (new_order)
 		return (0)
 	
-
-
 #########################################################
 # --------------------- User Hold --------------------- #
 #########################################################
 
 class	ShoppingCart:
 	def __init__ (self):
-		self.promotions = shop.promotions # Association Promotion (but it accully need to keep ALL Promotion then it's better if we use Shop)
+		self.promotions = shop.promotions # Association Promotion (but it accually need to keep ALL Promotion then it's better if we use Shop) -> i hope it's make sense
 		self.items = [] # Aggretion Item
 
 	def get_promotion(self, product):
 		for promotion in self.promotions:
-			for avaiable_product in promotion.products :
+			for avaiable_product in promotion.products:
 				if (avaiable_product is product and promotion.is_promotion_available()):
 					return (promotion)
 		return (Promotion([product], None, None, 0))
@@ -464,6 +449,8 @@ class	ShoppingCart:
 		self.items = []
 
 	def	add_to_cart(self, product, quantity):
+
+		# need to fix in case that new_product is already exist in the cart -> need to increment its quantity
 		if (product.stock < quantity):
 			return (0)
 		item = Item(product, quantity, self.get_promotion(product)) 
@@ -482,7 +469,6 @@ class	ShoppingCart:
 		self.change_quantity(self.get_item_by_index(index_of_item).quantity, index_of_item)
 
 	def	change_quantity(self, num ,index_of_item):
-		count = 0
 		selected_item = self.get_item_by_index(index_of_item)
 		selected_item.quantity += num
 		if (selected_item.quantity == 0):
@@ -592,7 +578,6 @@ class	Payment:
 		self.tel = tel
 		self.amount = amount
 		self.status = status
-		self.evidence = None
 
 class	ShippingInfo:
 	def	__init__ (self, address,shipping_status, date_shipping, date_delivered):

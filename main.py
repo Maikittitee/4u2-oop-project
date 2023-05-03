@@ -42,17 +42,7 @@ async def	view_user_detail(username : str):
 	return ("KO")
 	# return ("H)
 
-@app.get("/Users/{username}/cart")
-async def	view_cart(username : str):
-	# need to check searching name is a guy who search or not ... but how? -> im won't do this one neither.
-	return (shop.get_user_by_username(username).shopping_cart.show_cart())
 
-@app.get("/Products/{product_id}/add_to_cart")
-async def	add_to_cart(username:str, product_id:str, quantity:int):
-	ret = shop.get_user_by_username(username).shopping_cart.add_to_cart(product_cat.get_inst_product_by_id(product_id), quantity)
-	if (ret):
-		return (ret)
-	return ("KO")
 
 @app.get("/Products/{product_id}/add_to_fav")
 async def	add_to_fav(username, product_id):
@@ -61,13 +51,6 @@ async def	add_to_fav(username, product_id):
 	return ("OK")
 
 
-@app.post("/cart/checkout")
-async def	checkout(data:dict):
-	user = shop.get_user_by_username(data["username"])
-	new_order = user.make_purchase(user.address[data["address_index"]]) 
-	if (new_order):
-		return (new_order.order_id)
-	return ("KO")
 
 @app.post("/Auth/login")
 async def	login(data:dict):
@@ -91,10 +74,8 @@ async def	logout(data:dict):
 		return ("OK")
 	return ("KO")
 
-@app.post("/Users/{username}/orders")
-async def	get_orders(username):
-	print(shop.get_user_by_username(username).order)
-	return (shop.get_user_by_username(username).get_user_order())
+
+# system feat
 
 @app.get("/Users/{username}/confirm_payment")
 async def	confirm_payment(order_id, username, amount:int):
@@ -111,6 +92,13 @@ async def	view_order(email, order_id):
 	if (ret):
 		return (ret)
 	return ("KO")
+
+# info feat
+
+@app.post("/Users/{username}/orders")
+async def	get_user_orders(username):
+	print(shop.get_user_by_username(username).order)
+	return (shop.get_user_by_username(username).get_user_order())
 
 @app.post("/users/{username}/editinfo")
 async def	change_info(username, data:dict):
@@ -147,6 +135,33 @@ async def get_fav(username):
 	user = shop.get_user_by_username(username)
 	return (user.favorite)
 
+## cart feat
+
+@app.post("/cart/checkout")
+async def	checkout(data:dict):
+	user = shop.get_user_by_username(data["username"])
+	new_order = user.make_purchase(user.address[data["address_index"]]) 
+	if (new_order):
+		return (new_order.order_id)
+	return ("KO")
+
+@app.get("/Users/{username}/cart")
+async def	view_cart(username : str):
+	# need to check searching name is a guy who search or not ... but how? -> im won't do this one neither.
+	return (shop.get_user_by_username(username).shopping_cart.show_cart())
+
+@app.get("/Products/{product_id}/add_to_cart")
+async def	add_to_cart(username:str, product_id:str, quantity:int):
+	ret = shop.get_user_by_username(username).shopping_cart.add_to_cart(product_cat.get_inst_product_by_id(product_id), quantity)
+	if (ret):
+		return (ret)
+	return ("KO")
+
+async def change_quantity(user, index, new_quantity):
+	pass
+
+async def remove_item():
+	pass
 
 
 # ADMIN SIDE API 
@@ -206,3 +221,5 @@ async def	admin_browse_products(name:Optional[str] = None, in_type:Optional[str]
 async def	browse_promotions():
 	return (shop.promotions)
 
+async def	set_delivered(order_id):
+	pass
