@@ -49,6 +49,7 @@
 
             const result = await response.json();
 
+
             if (result !== "KO") {
                 document.getElementById("display-order-id").innerText = result.id;
                 document.getElementById("display-order-date").innerText = result.create;
@@ -59,23 +60,33 @@
 
                 for (const itemId in items) {
                     const item = items[itemId];
-
-                    for (const subItemId in item) {
-                        const subItem = item[subItemId];
+					console.log(item)	
+                    // for (const subItemId in item) {
+                    //     const subItem = item[subItemId];
                         const tr = document.createElement("tr");
 
-                        tr.innerHTML = `
-                            <td>${subItemId}</td>
-                            <td>${subItem.product_name}</td>
-                            <td>${subItem.product_price}</td>
-                            <td>${subItem.discount}</td>
-                            <td>${subItem.price_after_discount}</td>
-                            <td>${subItem.quantity}</td>
-                            <td>${subItem.price}</td>
-                        `;
+                        // tr.innerHTML = `
+                        //     <td>${subItemId}</td>
+                        //     <td>${subItem.product_name}</td>
+                        //     <td>${subItem.product_price}</td>
+                        //     <td>${subItem.discount}</td>
+                        //     <td>${subItem.price_after_discount}</td>
+                        //     <td>${subItem.quantity}</td>
+                        //     <td>${subItem.price}</td>
+                        // `;
+
+					    tr.innerHTML = `
+                            <td>${item.id}</td>
+                            <td>${item.product_name}</td>
+                            <td>${item.product_price}</td>
+                            <td>${item.discount}</td>
+                            <td>${item.price_after_discount}</td>
+                            <td>${item.quantity}</td>
+                            <td>${item.price}</td>
+                        `
 
                         orderItems.appendChild(tr);
-                    }
+                    // }
                 }
 
                 document.getElementById("display-total").innerText = result.total;

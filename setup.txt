@@ -3,7 +3,7 @@ required module (pip install)
 	- pip3 install rich
 	- pip3 install uvicorn
 
-after instll all of these, Run the api using ```uvicorn app:main --reload```
+after instll all of these, Run the api using ```uvicorn main:app --reload```
 
 testing 
 
